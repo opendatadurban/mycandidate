@@ -1,4 +1,4 @@
-# Green Field flask template
+# My Candidate flask template
 
 ## Technical Specs for QA
 * Python 3.10.8
