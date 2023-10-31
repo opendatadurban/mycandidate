@@ -28,6 +28,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Get Environment Variables and Create Configuration File
+      uses: alekangelov/secret-envfile@v1
+      with:
+        content: ${{ secrets.ENV }}
+        filename: main/config/development.cfg
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
