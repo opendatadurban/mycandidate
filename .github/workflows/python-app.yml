@@ -48,25 +48,3 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-    - name: Install Heroku CLI
-      run: |
-        curl https://cli-assets.heroku.com/install.sh | sh
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-
-    - name: Deploy to Heroku
-      run: |
-        heroku login -i
-        heroku git:remote -a dev-mycandidate
-        git add .
-        git commit -am "initial commit"
-        git push heroku master
-      env:
-        HEROKU_APP_NAME: dev-mycandidate
-
-    # - name: Run rebuild_db.py
-    #   run: |
-    #     pip install -r requirements.txt
-    #     python rebuild_db.py
-    #   env:
-    #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
