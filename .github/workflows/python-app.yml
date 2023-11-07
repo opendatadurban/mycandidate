@@ -51,7 +51,6 @@ jobs:
     - name: Install Heroku CLI
       run: |
         curl https://cli-assets.heroku.com/install.sh | sh
-        heroku login -i
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
@@ -61,7 +60,6 @@ jobs:
         git remote add heroku https://git.heroku.com/dev-mycandidate.git
         git push heroku master
       env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         HEROKU_APP_NAME: dev-mycandidate
 
     # - name: Run rebuild_db.py
