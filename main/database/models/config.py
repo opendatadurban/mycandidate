@@ -1,9 +1,10 @@
-from ..app import db
+from ...app import db
 from sqlalchemy import Column, Integer, String
 from wtforms import SelectField, validators
-from ..forms import Form
+from ...forms import Form
+from main.database.base_class import Base
 
-class Config(db.Model):
+class Config(Base):
     """
     For site settings
     """
