@@ -58,7 +58,7 @@ jobs:
       run: |
         heroku login -i
         git remote add heroku https://git.heroku.com/dev-mycandidate.git
-        git push heroku master
+        git push heroku main
       env:
         HEROKU_APP_NAME: dev-mycandidate
 
