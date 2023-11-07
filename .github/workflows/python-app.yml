@@ -57,8 +57,10 @@ jobs:
     - name: Deploy to Heroku
       run: |
         heroku login -i
-        git remote add heroku https://git.heroku.com/dev-mycandidate.git
-        git push heroku main
+        heroku git:remote -a dev-mycandidate
+        git add .
+        git commit -am "initial commit"
+        git push heroku master
       env:
         HEROKU_APP_NAME: dev-mycandidate
 
