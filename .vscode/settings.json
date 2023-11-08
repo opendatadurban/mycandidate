@@ -1,0 +1,15 @@
+{
+    "sqltools.connections": [
+        {
+            "pgOptions": {
+                "statement_timeout": 5000,
+                "query_timeout": 5000
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "name": "My Candidate",
+            "connectString": "postgres://postgres:Creat0r%^&*@localhost:5432/mycandidate_dev"
+        }
+    ]
+}
