@@ -1,7 +1,7 @@
 import pytest
 from app import app, db
-from main.models import Candidate, Config
-from main.models.build_db import seed_temp_indicators, seed_site_settings  
+from main.database.models import Candidate, Config
+from main.database.models.build_db import seed_temp_indicators, seed_site_settings  
 
 @pytest.fixture
 def client():
