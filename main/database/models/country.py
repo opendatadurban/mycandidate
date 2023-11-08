@@ -39,7 +39,7 @@ class CandidateForm(Form):
     def populate_obj(self, obj):
         super(CandidateForm, self).populate_obj(obj)
 
-class WardCandidate(db.Model):
+class WardCandidate(Base):
     """
     A Ward Candidate
     """
