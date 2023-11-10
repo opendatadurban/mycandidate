@@ -11,5 +11,6 @@
             "name": "My Candidate",
             "connectString": "postgres://postgres:Creat0r%^&*@localhost:5432/mycandidate_dev"
         }
-    ]
+    ],
+    "sqltools.useNodeRuntime": true
 }
