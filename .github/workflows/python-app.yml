@@ -38,6 +38,12 @@ jobs:
         content: ${{ secrets.ENV }}
         filename: main/config/development.cfg
 
+    - name: Create ini File for Alembic
+      uses: alekangelov/secret-envfile@v1
+      with:
+        content: ${{ secrets.INI }}
+        filename: alembic.ini
+
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
