@@ -10,7 +10,6 @@ from alembic import command
 @pytest.fixture(scope="module")
 def client() -> Generator:
     app.config['TESTING'] = True
-    print('>>>>>>>>>', db)
 
     # test_db_path = os.path.abspath('tests/test_db.sqlite')
     # app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{test_db_path}'
