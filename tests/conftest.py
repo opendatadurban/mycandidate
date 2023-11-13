@@ -1,5 +1,5 @@
 import pytest
-import os
+import os, tempfile
 from main.database.session import SessionLocal
 from typing import Generator
 from app import app, db
