@@ -1,5 +1,5 @@
 from . import *  # noqa
-from ..app import app
+from ...app import app
 import pandas as pd
 CHUNK_SIZE = 3500
 records = []
@@ -16,7 +16,7 @@ def seed_temp_indicators(db, excel_file_path):
             candidate.sex = row["Sex"]
             candidate.party = row["Party"]
             candidate.constituency = row["Constituency"]
-            records.append(candidate)
+            
 
             # Dynamically handle additional columns
             for column in df.columns:
@@ -36,7 +36,9 @@ def seed_temp_indicators(db, excel_file_path):
             db.session.bulk_save_objects(records)
             db.session.commit()
         except Exception as e:
-            print(e)
+            db.session.rollback()
+            print("DB exception: ", e)
+            raise
 
 
 def seed_site_settings(db, excel_file_path):

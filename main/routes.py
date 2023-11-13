@@ -1,5 +1,5 @@
 from flask import request, render_template
-from .models import *
+from .database.models import *
 from .app import app
 from sqlalchemy import asc
 

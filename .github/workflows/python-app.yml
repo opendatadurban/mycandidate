@@ -38,6 +38,12 @@ jobs:
         content: ${{ secrets.ENV }}
         filename: main/config/development.cfg
 
+    - name: Create ini File for Alembic
+      uses: alekangelov/secret-envfile@v1
+      with:
+        content: ${{ secrets.INI }}
+        filename: alembic.ini
+
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -45,6 +51,12 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
+    - name: Database Migrations
+      run: |
+        alembic upgrade head
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        
     - name: Test with pytest
       run: |
         pytest

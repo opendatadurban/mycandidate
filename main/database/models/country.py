@@ -1,10 +1,11 @@
-from ..app import db
+from ...app import db
 
 from sqlalchemy import Column, Integer, String
 from wtforms import SelectField, validators
-from ..forms import Form
+from ...forms import Form
+from main.database.base_class import Base
 
-class Candidate(db.Model):
+class Candidate(Base):
     """
     A single data point (yearly value) of an indicator
     """
@@ -38,7 +39,7 @@ class CandidateForm(Form):
     def populate_obj(self, obj):
         super(CandidateForm, self).populate_obj(obj)
 
-class WardCandidate(db.Model):
+class WardCandidate(Base):
     """
     A Ward Candidate
     """
