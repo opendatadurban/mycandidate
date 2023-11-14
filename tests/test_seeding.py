@@ -14,7 +14,7 @@ def test_seed_candidates_from_excel(client):
         # Perform assertions
         num_candidates = db.session.query(Candidate).count()
 
-        expected_num_candidates = 17
+        expected_num_candidates = 38
         assert num_candidates == expected_num_candidates
 
 
