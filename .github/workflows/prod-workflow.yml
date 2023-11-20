@@ -5,14 +5,11 @@ name: Build for MyCandidate App
 
 on:
   push:
-    # Change to main once workflow is in place
     branches:
-    # - main
-    - staging
+    - main
   pull_request:
     branches: 
-      # - main
-      - staging
+      - main
 
 permissions:
   contents: read

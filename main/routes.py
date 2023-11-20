@@ -1,7 +1,42 @@
-from flask import request, render_template
+from flask import request, render_template, redirect, url_for, session, flash
 from .database.models import *
 from .app import app
 from sqlalchemy import asc
+from .decorators import requires_auth
+
+# Predefined secret key for authentication
+predefined_secret_key = app.config['CLIENT_SECRET_KEY']
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        entered_secret_key = request.form['secret_key']
+
+        # Check if the entered secret key matches the predefined secret key
+        if entered_secret_key == predefined_secret_key:
+            session['authenticated'] = True
+            flash('Login successful!', 'success')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Login failed. Check your secret key.', 'error')
+
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    # Clear the authentication flag from the session
+    session.pop('authenticated', None)
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('login'))
+
+
+@app.route('/dashboard')
+@requires_auth
+def dashboard():
+    return render_template('dashboard.html')
+
+    
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
