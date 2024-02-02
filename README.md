@@ -44,9 +44,11 @@ run 'python rebuild_db.py'
 ### Deploying database changes
 * mycandidate App uses Flask-Migrate (which uses Alembic) to handle database migrations.
 * To add a new model or make changes, update the SQLAlchemy definitions in `main/models/`. Then run
-`python app.py db migrate --message "a description of your change"`
+`alembic revision -m "create account table"`
 * This will autogenerate a change. Double check that it make sense. To apply it on your machine, run
-`python app.py db upgrade head`
+`alembic upgrade head`
+* To downgrade all versions, this ultimately delete all tables
+`alembic downgrade base`
   
 
 ### Pytest
