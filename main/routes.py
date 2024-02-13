@@ -47,10 +47,11 @@ def index():
     form = CandidateForm()
     form_url = "/"
     if request.method == 'GET':
-        print("=====================")
         candidates = db.session.query(Candidate).all()
         final_candidates = [c.to_dict() for c in candidates]
-        print(final_candidates)
+        config_queryset = db.session.query(Config).first()
+        config = config_queryset.json()
+        # print(config)
     elif request.method == 'POST':
         ward = form.ds_id.data
         final_candidates = db.session.query(Candidate).filter(Candidate.ward_id == form.ds_id.data).all()
@@ -59,6 +60,7 @@ def index():
     return render_template(
             'index.html', 
             candidates=final_candidates, 
+            config=config,
             ward= ward,  
             form=form, 
             form_url=form_url

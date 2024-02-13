@@ -20,3 +20,14 @@ class Config(Base):
 
     def __repr__(self):
         return f'<id {self.id}>'
+    
+    def json(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'short_title': self.title_short,
+            'navbar_logo': self.navbar_logo,
+            'favicon_logo': self.favicon_logo,
+            'primary_color': self.primary_color,
+            'secondary_color': self.secondary_color,
+        }
