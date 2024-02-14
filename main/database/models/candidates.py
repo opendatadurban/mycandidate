@@ -170,3 +170,38 @@ class CandidateForm(Form):
 
     def populate_obj(self, obj):
         super(CandidateForm, self).populate_obj(obj)
+
+def create_form(candidate_type):
+    class CandidatesForm(Form):
+        ds_id = SelectField('Ward', [validators.DataRequired()])
+
+        def __init__(self, *args, **kwargs):
+            super(CandidatesForm, self).__init__(*args, **kwargs)
+            assurances = [
+                (assurance.ward.id, f"{assurance.ward.name} - {assurance.ward.code}")
+                for assurance in db.session.query(Candidate).filter(Candidate.candidate_type == candidate_type).all()
+            ]
+            assurances.insert(0, ("",""))
+            self.ds_id.choices = assurances
+
+        def validate(self):
+            return super(CandidatesForm, self).validate()
+
+        def populate_obj(self, obj):
+            super(CandidatesForm, self).populate_obj(obj)
+    return CandidatesForm()
+
+def get_data():
+    distinct_types = db.session.query(Candidate).with_entities(Candidate.candidate_type).distinct().all()
+    data = []
+    for distinct_type in distinct_types:
+        distinct_type = distinct_type[0]
+        cands = db.session.query(Candidate).filter(Candidate.candidate_type == distinct_type).all()
+        form = create_form(distinct_type)
+        candidate_type = distinct_type
+        data.append({
+            'candidates': cands,
+            'form':form,
+            'candidate_type':candidate_type
+        })
+    return data
