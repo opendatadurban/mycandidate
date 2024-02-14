@@ -42,28 +42,42 @@ def dashboard():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     candidates = None
-    ward = None
+    ward_candidates = None
+    config = None
     final_candidates = None
-    form = CandidateForm()
+    candidates_final = None
+    candidate_form = CandidateForm()
+    ward_form = WardForm()
     form_url = "/"
-    if request.method == 'GET':
+    area_name = "candidates"
+    if request.method == 'POST' and candidate_form.ds_id.data:
+        candidates_final = candidate_form.data
+        candidates = db.session.query(Candidate).filter(Candidate.candidate_type == candidate_form.ds_id.data).all()
+        final_candidates = [c.to_dict() for c in candidates]
+        area_name = "candidate_type"
+        # print(">>>>>>", [c.to_dict() for c in candidates])
+    elif request.method == 'POST' and ward_form.ds_id.data:
+        ward_candidates = ward_form.ds_id.data
+        candidates = db.session.query(Candidate).filter(Candidate.ward_id == ward_form.ds_id.data).all()
+        final_candidates = [c.to_dict() for c in candidates]
+        # print(">>>>>>", [c.to_dict() for c in candidates])
+        area_name = "ward"
+    elif request.method == 'GET':
         candidates = db.session.query(Candidate).all()
         final_candidates = [c.to_dict() for c in candidates]
         config_queryset = db.session.query(Config).first()
         config = config_queryset.json()
-        # print(config)
-    elif request.method == 'POST':
-        ward = form.ds_id.data
-        final_candidates = db.session.query(Candidate).filter(Candidate.ward_id == form.ds_id.data).all()
-        print(">>>>>>", [c.to_dict() for c in final_candidates])
     
     return render_template(
             'index.html', 
-            candidates=final_candidates, 
+            final_candidates=final_candidates, 
+            candidates_final=candidates_final,
             config=config,
-            ward= ward,  
-            form=form, 
-            form_url=form_url
+            ward_candidates=ward_candidates,  
+            candidate_form=candidate_form, 
+            form_url=form_url,
+            ward_form=ward_form, 
+            area_name=area_name
         )
 
 

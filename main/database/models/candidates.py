@@ -154,13 +154,50 @@ class Candidate(Base):
         }
     
 class CandidateForm(Form):
-    ds_id = SelectField('Ward', [validators.DataRequired()])
+    ds_id = SelectField('Candidate Type', [validators.DataRequired()])
 
     def __init__(self, *args, **kwargs):
         super(CandidateForm, self).__init__(*args, **kwargs)
         assurances = [
+            (assurance.candidate_type, f"{assurance.candidate_type}")
+            for assurance in db.session.query(Candidate).distinct(Candidate.candidate_type)
+        ]
+        assurances.insert(0, ("",""))
+        self.ds_id.choices = assurances
+
+    def validate(self):
+        return super(CandidateForm, self).validate()
+
+    def populate_obj(self, obj):
+        super(CandidateForm, self).populate_obj(obj)
+    
+class WardForm(Form):
+    ds_id = SelectField('Local Authority', [validators.DataRequired()])
+
+    def __init__(self, *args, **kwargs):
+        super(WardForm, self).__init__(*args, **kwargs)
+        assurances = [
             (assurance.ward.id, f"{assurance.ward.name} - {assurance.ward.code}")
             for assurance in db.session.query(Candidate).distinct(Candidate.ward_id)
+        ]
+        assurances.insert(0, ("",""))
+        self.ds_id.choices = assurances
+
+    def validate(self):
+        return super(WardForm, self).validate()
+
+    def populate_obj(self, obj):
+        super(WardForm, self).populate_obj(obj)
+
+
+class ConstituencyForm(Form):
+    ds_id = SelectField('Constituency Name', [validators.DataRequired()])
+
+    def __init__(self, *args, **kwargs):
+        super(ConstituencyForm, self).__init__(*args, **kwargs)
+        assurances = [
+            (assurance.constituency.id, assurance.constituency.name)
+            for assurance in Candidate.query.distinct(Candidate.constituency_id)
         ]
         assurances.insert(0, ("",""))
         self.ds_id.choices = assurances
