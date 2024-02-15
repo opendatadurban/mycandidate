@@ -195,12 +195,9 @@ def get_data():
     distinct_types = db.session.query(Candidate).with_entities(Candidate.candidate_type).distinct().all()
     data = []
     for distinct_type in distinct_types:
-        distinct_type = distinct_type[0]
-        cands = db.session.query(Candidate).filter(Candidate.candidate_type == distinct_type).all()
-        form = create_form(distinct_type)
-        candidate_type = distinct_type
+        candidate_type = distinct_type[0]
+        form = create_form(candidate_type)
         data.append({
-            'candidates': cands,
             'form':form,
             'candidate_type':candidate_type
         })

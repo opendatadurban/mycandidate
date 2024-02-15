@@ -1,8 +1,8 @@
 body{
-    background-color: #292F34;
+    background-color: #2F3542;
 }
 .nav-heading{
-    background-color: #292F34;
+    background-color: #2F3542;
     /* padding: 15px auto; */
 }
 .nav-heading .light-title{
@@ -22,11 +22,10 @@ body{
     font-weight: 700;
     letter-spacing: 0.36px;
     line-height: 31.69px;
-    color: #C9ADE8
 }
 
 .grey-wrapper{
-    background-color: #878787;
+    background-color: #868C98;
     padding-top: 30px;
 }
 .grey-wrapper .nav-tabs{
@@ -38,7 +37,7 @@ body{
 }
 
 .grey-wrapper .nav-tabs li a{
-    font-family: 'Helvetica Neue';
+    font-family: 'Montserrat';
     font-size: 22px;
     line-height: 24px;
     text-align: center;
@@ -52,7 +51,7 @@ body{
 }
 .grey-wrapper .nav-tabs li.active a {
     color: #FFFFFF ;
-    font-weight: 500;
+    font-weight: 600;
     background-color: #33404E;
     border: none;
 }
@@ -61,14 +60,15 @@ body{
     background-color: #33404E;
     padding-top: 30px;
     padding-bottom: 60px;
+    min-height: calc(100vh - 294px - 75px - 78px);
 }
 
 .tab-content .panel-heading{
-    font-family: 'Helvetica Neue';
-    font-weight: 200;
+    font-family: 'Montserrat';
+    font-weight: 400;
     font-style: italic;
-    font-size: 26px;
-    line-height: 32p;
+    font-size: 24px;
+    line-height: 32px;
     background: transparent;
     color: #FFFFFF;
     border: none;
@@ -80,21 +80,34 @@ body{
 }
 
 .tab-content .panel.panel-info .control-label{
-    font-family: 'Helvetica Neue';
-    font-weight: 500;
+    font-family: 'Montserrat';
+    font-weight: 400;
     font-size: 12px;
     line-height: 18px;
     color: #FFFFFF;
 }
 
-.tab-content .panel.panel-info .select2-selection__placeholder{
+select2-selection__renderedselect2-selection__placeholder{
     color: #878787;
-    font-family: 'Helvetica Neue';
-    font-weight: 500;
+    font-family: 'Montserrat';
     font-size: 14px;
+    font-weight: 500;
     line-height: 18px;
 }
-
+.tab-content .panel.panel-info .select2-container .select2-selection--single .select2-selection__rendered{
+    font-family: 'Montserrat';
+    font-size: 14px;
+    font-weight: 500;
+}
+#js-example-basic-single{
+    font-family: 'Montserrat';
+    font-size: 14px;
+    font-weight: 500;
+    height: 42px;
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
+    padding: 5px 0;
+}
 .tab-content .panel.panel-info .select2-container--default .select2-selection--single{
     height: 42px;
     border-bottom-left-radius: 3px;
@@ -103,15 +116,13 @@ body{
 }
 
 .tab-content .panel.panel-info .btn.btn-primary{
-    background-color: #6F4CA9;
     color: #F0E9F9 !important;
     padding: 11px 14px;
     color: #878787;
-    font-family: 'Helvetica Neue';
-    font-weight: 500;
+    font-family: 'Montserrat';
+    font-weight: 600;
     font-size: 14px;
     line-height: 18px;
-    border-color:#6F4CA9 ;
 }
 
 .tab-content .panel.panel-info .select2-container--default .select2-selection--single .select2-selection__arrow{
@@ -125,9 +136,9 @@ body{
 
 .select2-results__options .select2-results__option{
     color: #33404E;
-    font-family: 'Helvetica Neue';
-    font-weight: 500;
+    font-family: 'Montserrat';
     font-size: 14px;
+    font-weight: 500;
     line-height: 28px;
 }
 
@@ -137,7 +148,7 @@ body{
 }
 .tab-content .panel.panel-info #results h2{
     color: #FFFFFF;
-    font-family: 'Helvetica Neue';
+    font-family: 'Montserrat';
     font-weight: 500;
     font-size: 20px;
     line-height: 24px;
@@ -145,7 +156,6 @@ body{
 }
 
 .tab-content .panel.panel-info #results a{
-    color: #C9ADE8;
     font-family: 'Helvetica Neue';
     font-weight: 400;
     font-size: 14px;
@@ -155,41 +165,44 @@ body{
 .tab-content .panel.panel-info #results .item
 {
     color: #FFFFFF;
-    font-family: 'Helvetica Neue';
+    font-family: 'Montserrat';
     font-weight: 400;
     font-size: 14px;
     line-height: 20px;
     margin-bottom: 2px;
 }
+.tab-content .panel.panel-info #results .item a
+{
+    font-family: 'Montserrat';
+    font-weight: 500;
+    font-size: 14px;
+}
 
 .footer-below {
-    background-color: #292F34;
+    background-color: #2F3542;
     padding: 30px 0;
 }
 
 .footer-below .btn.btn-mini.btn-primary{
-    background-color: #7966A6;
     color: #FFFFFF;
-    font-family: 'Helvetica Neue';
-    font-weight: 400;
+    font-family: 'Montserrat';
+    font-weight: 500;
     font-size: 12px;
-    border-color:#7966A6 ;
     text-decoration: none;
 }
 .footer-below .font-style{
     color: #FFFFFF;
-    font-family: 'Helvetica Neue';
+    font-family: 'Montserrat';
     font-weight: 400;
     font-size: 12px;
 }
 .footer-below a{
-    color: #C9ADE8;
     text-decoration: underline;
 }
 
 .footer-below .font-style p{
     color: #FFFFFF;
-    font-family: 'Helvetica Neue';
+    font-family: 'Montserrat';
     font-weight: 700;
     font-size: 14px;
     letter-spacing: 0.21px;
@@ -197,7 +210,7 @@ body{
 }
 .footer-below .font-style  span{
     color: #FFFFFF;
-    font-family: 'Open Sans';
+    font-family: 'Montserrat';
     font-weight: 400;
     font-size: 12px;
     letter-spacing: 0.25px;

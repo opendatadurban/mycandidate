@@ -78,6 +78,8 @@ def home():
     form_url = "/"
     data = get_data()
     area_name = data[0]['candidate_type']
+    config_queryset = db.session.query(Config).first()
+    config = config_queryset.json()
     if request.method == 'GET':
         print("=====================")
         #candidates = db.session.query(Candidate).all()
@@ -89,16 +91,17 @@ def home():
         candidates = db.session.query(Candidate).filter(Candidate.ward_id == ward).all()
         candidate = db.session.query(Candidate).filter(Candidate.ward_id == ward).first()
         area_name =candidate.candidate_type
-        print(">>>>>>", [c.to_dict() for c in candidates])
-        print(">>>>>> request.form", request.form)
+        candidates = [c.to_dict() for c in candidates]
     
     return render_template(
             'home.html', 
             candidates=candidates,
             presidential_candidates = presidential_candidates,
+            candidate = candidate,
             ward= ward, 
             form_url=form_url,
             data = data,
+            config=config,
             area_name = area_name
         )
 

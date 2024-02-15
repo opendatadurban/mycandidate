@@ -23,7 +23,24 @@
         rel="stylesheet">
     {#
     <link href="static/css/select2min.css" rel="stylesheet">#}
+<style>
+    .tab-content .panel.panel-info #results a{
+        color: {{config.primary_color}};
+    }
+    .tab-content .panel.panel-info .btn.btn-primary{
+        border-color:{{config.primary_color}} ;
+        background-color: {{config.primary_color}};
+    }
 
+    .footer-below a, .nav-heading .purple-tittle{
+        color: {{config.secondary_color}};
+    }
+    .footer-below .btn.btn-mini.btn-primary{
+        background: transparent;
+        border-color:{{config.secondary_color}} ;
+        color: {{config.secondary_color}};
+    }
+</style>
 
 
 </head>
@@ -34,7 +51,7 @@
             <div class="row">
                 <div class="col-12">
                     <h5 class="light-title">MyCandidate</h5>
-                    <h4 class="purple-tittle">Zimbabwe</h4>
+                    <h4 class="purple-tittle">{{config.title}}</h4>
                 </div>
             </div>
         </div>
@@ -59,10 +76,11 @@
                                 <form action="/home" method="POST">
                                     {{ d.form.csrf_token }}
                                     {{ d.form.hidden_tag() }}
+                                    {% set id = 'js-example-basic-single-' + loop.index|string %}
                                     <div class="form-group">
-                                        <label class="control-label" for="address">Search your local authority:</label>
+                                        <label class="control-label" for="address">Search your {{d.candidate_type}}:</label>
                                         <div class="input-group">
-                                            {{ d.form.ds_id(class="form-control",id="js-example-basic-single") }}
+                                            {{ d.form.ds_id(class="form-control", id=id ) }}
                                             <span class="input-group-btn">
                                                 <button type="submit" class="btn btn-primary">Find Candidates</button>
                                             </span>
@@ -70,17 +88,17 @@
                                     </div>
                                 </form>
 
-                                {% if candidates %}
+                                {% if candidates and candidate.candidate_type == d.candidate_type %}
                                     <div id="results">
                                         {% if d.candidate_type %}
-                                            <h2>Constituency: {{ d.candidate_type }}</h2>
+                                            <h2>{{ d.candidate_type }}: {{ candidate.ward.name }}</h2>
 
-                                            <a href="http://www.google.com/search?q={{ d.candidate_type }}" class="mb-3"
-                                                target="_blank">Get more information for: {{ d.candidate_type }}</a>
+                                            <a href="http://www.google.com/search?q={{ candidate.ward.name }}" class="mb-3"
+                                                target="_blank">Get more information for: {{ candidate.ward.name }}</a>
                                             <h2>Your candidates are:</h2>
                                             {% for item in candidates %}
                                                 <div class="item"><a target="_blank"
-                                                        href="http://www.google.co.zw/search?q={{ item.person.name }} {{ item.person.surname }}">{{loop.index}}.
+                                                        href="http://www.google.co.com/search?q={{ item.person.name }} {{ item.person.surname }}">{{loop.index}}.
                                                         {{ item.person.name }} {{ item.person.surname }} </a>(Sex: {{ item.person.gender }})
                                                         {% if item.person.party %} - {{item.person.party.name}}{% endif %} {% if item.ward.code %} -Ward: {{
                                                             item.ward.code }} {% endif %}</div>
@@ -88,7 +106,7 @@
                                             {% for candidate in presidential_candidates %}
                                                 <h2>Your Presidential Candidates are:</h2>
                                                 <div class="item"><a target="_blank"
-                                                        href="http://www.google.co.zw/search?q={{ candidate.person.name }} {{ candidate.person.surname }}">{{loop.index}}.
+                                                        href="http://www.google.co.com/search?q={{ candidate.person.name }} {{ candidate.person.surname }}">{{loop.index}}.
                                                         {{ candidate.person.name }} </a> - {{ candidate.person.party }}</div>
                                                 {% endfor %}
                                         {% endif %}
@@ -116,10 +134,8 @@
                 </div>
                 <br>
                 <div class="col-lg-12 font-style" style="">
-                    A collaboration between: </br> <a target="_blank" href="">Magamba Network</a> and <a target="_blank"
+                    A collaboration between:</br> <a target="_blank" href="">{{config.organisation}}</a> and <a target="_blank"
                         href="https://opencitieslab.org">Open Cities Lab</a> </br></br>
-
-                    This elections data was sourced from <a target="_blank" href="">the ZEC</a> </br></br>
 
                     <p>We respect your privacy!</p>
 
@@ -127,9 +143,7 @@
                         The MyCandidate tool does not store any user information, including your address.</br></br>
 
                         We are still building and improving the platform
-                        and your feedback will be much appreciated.</br></br>
-                        <i>If you find any issues in our data please contact:</i></br>
-                        <a href="mailto:info@zimbabweelections2023.co.zw">info@zimbabweelections2023.co.zw</a>
+                        and your feedback will be much appreciated.
                     </span>
 
                 </div>
@@ -168,12 +182,11 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-    $('#js-example-basic-single').select2({
+    {% for d in data %}
+    $('#js-example-basic-single-{{loop.index}}').select2({
         placeholder: 'Select an option'
     });
-    $('#js-example-basic-single1').select2({
-        placeholder: 'Select an option'
-    });
+    {% endfor %}
 </script>
 
 </html>
