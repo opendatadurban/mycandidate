@@ -4,19 +4,19 @@
     <h2>Home Page</h2>
     <div class="form-control">
         <form action="{{ form_url }}" method="POST">
-            {{ form.hidden_tag() }}
+            {{ candidate_form.hidden_tag() }}
             <div class="form-group">
-                <label class="control-label" for="address">Search your local authority:</label>
+                <label class="control-label" for="address">Search by authority:</label>
                 <div class="input-group">
-                    {{ form.ds_id(class="form-control", id="js-example-basic-single") }}
+                    {{ candidate_form.ds_id(class="form-control", id="js-example-basic-single") }}
                     <span class="input-group-btn">
-                            <button type="submit" class="btn btn-primary">Find Candidates</button>
-                        </span>
+                        <button type="submit" class="btn btn-primary">Find Candidates</button>
+                    </span>
                 </div>
             </div>
         </form>
     </div>
-    {% if candidates %}
+    {% if final_candidates %}
     <table>
         <h2>Candidates</h2>
         <tr>
@@ -32,14 +32,14 @@
             <th>Ward</th>
             <th>Ward Number</th>
         </tr>
-        {% for item in candidates %}
+        {% for item in final_candidates %}
         <tr>
+            {% if item.person %}
             <td>{{item.candidate_type}}</td>
             <td>{{item.person.surname}}</td>
             <td>{{item.person.name}}</td>
             <td>{{item.person.gender}}</td>
             <td>{{item.person.race}}</td>
-            {% if item.person.party %}
             <td>{{item.person.party.name}}</td>
             <td>{{item.person.party.abbv}}</td>
             {% endif %}

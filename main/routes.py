@@ -36,43 +36,11 @@ def logout():
 def dashboard():
     return render_template('dashboard.html')
 
-    
 
-# TODO: route to get candidates
 @app.route('/', methods=['GET', 'POST'])
-def index():
-    candidates = None
-    ward = None
-    final_candidates = None
-    form = CandidateForm()
-    form_url = "/"
-    distinct_names = db.session.query(Candidate).with_entities(Candidate.candidate_type).distinct().all()
-    tabs = [c[0] for c in distinct_names]
-    print(">>>>>>", tabs)
-    if request.method == 'GET':
-        candidates = db.session.query(Candidate).all()
-        final_candidates = [c.to_dict() for c in candidates]
-        config_queryset = db.session.query(Config).first()
-        config = config_queryset.json()
-        # print(config)
-    elif request.method == 'POST':
-        ward = form.ds_id.data
-        final_candidates = db.session.query(Candidate).filter(Candidate.ward_id == form.ds_id.data).all()
-        print(">>>>>>", [c.to_dict() for c in final_candidates])
-    
-    return render_template(
-            'index.html', 
-            candidates=final_candidates, 
-            config=config,
-            ward= ward,  
-            form=form, 
-            form_url=form_url
-        )
-
-
-@app.route('/home', methods=['GET', 'POST'])
 def home():
     candidates = None
+    candidate = None
     presidential_candidates = []
     ward = None
     form_url = "/"

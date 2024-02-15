@@ -73,7 +73,7 @@
                         <div class="panel panel-info">
                             <div class="panel-heading">Find out who is contesting in your {{d.candidate_type}}</div>
                             <div class="panel-body">
-                                <form action="/home" method="POST">
+                                <form action="/" method="POST">
                                     {{ d.form.csrf_token }}
                                     {{ d.form.hidden_tag() }}
                                     {% set id = 'js-example-basic-single-' + loop.index|string %}
