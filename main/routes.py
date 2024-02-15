@@ -65,4 +65,5 @@ def home():
             config=config,
             area_name = candidate_type,
             domain = request.url_root
+
         )
