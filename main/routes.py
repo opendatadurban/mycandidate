@@ -36,74 +36,43 @@ def logout():
 def dashboard():
     return render_template('dashboard.html')
 
-    
 
-# TODO: route to get candidates
 @app.route('/', methods=['GET', 'POST'])
-def index():
+def home():
     candidates = None
-    ward_candidates = None
-    config = None
-    final_candidates = None
-    candidates_final = None
-    candidate_form = CandidateForm()
-    ward_form = WardForm()
+    candidate = None
+    presidential_candidates = []
+    ward = None
     form_url = "/"
-    area_name = "candidates"
-    if request.method == 'POST' and candidate_form.ds_id.data:
-        candidates_final = candidate_form.data
-        candidates = db.session.query(Candidate).filter(Candidate.candidate_type == candidate_form.ds_id.data).all()
-        final_candidates = [c.to_dict() for c in candidates]
-        area_name = "candidate_type"
-        # print(">>>>>>", [c.to_dict() for c in candidates])
-    elif request.method == 'POST' and ward_form.ds_id.data:
-        ward_candidates = ward_form.ds_id.data
-        candidates = db.session.query(Candidate).filter(Candidate.ward_id == ward_form.ds_id.data).all()
-        final_candidates = [c.to_dict() for c in candidates]
-        # print(">>>>>>", [c.to_dict() for c in candidates])
-        area_name = "ward"
-    elif request.method == 'GET':
-        candidates = db.session.query(Candidate).all()
-        final_candidates = [c.to_dict() for c in candidates]
-        config_queryset = db.session.query(Config).first()
-        config = config_queryset.json()
+    data = get_data()
+    area_name = data[0]['candidate_type']
+    config_queryset = db.session.query(Config).first()
+    config = config_queryset.json()
+    if request.method == 'GET':
+        print("=====================")
+        #candidates = db.session.query(Candidate).all()
+        #final_candidates = [c.to_dict() for c in candidates]
+        #print(final_candidates)
+    elif request.method == 'POST':
+        #ward = request.form.ds_id.data
+        ward = request.form['ds_id']  
+        candidates = db.session.query(Candidate).filter(Candidate.ward_id == ward).all()
+        candidate = db.session.query(Candidate).filter(Candidate.ward_id == ward).first()
+        area_name =candidate.candidate_type
+        candidates = [c.to_dict() for c in candidates]
     
     return render_template(
-            'index.html', 
-            final_candidates=final_candidates, 
-            candidates_final=candidates_final,
-            config=config,
-            ward_candidates=ward_candidates,  
-            candidate_form=candidate_form, 
+            'home.html', 
+            candidates=candidates,
+            presidential_candidates = presidential_candidates,
+            candidate = candidate,
+            ward= ward, 
             form_url=form_url,
-            ward_form=ward_form, 
-            area_name=area_name
+            data = data,
+            config=config,
+            area_name = area_name
         )
 
-
-# @app.route('/', methods=['GET', 'POST'])
-# def home():
-#     form = CandidateForm()
-#     form_ward = WardCandidateForm()
-#     candidates = False
-#     ward_candidates = False
-#     constituency = False
-#     constituency_ward = False
-#     area_name = "Ward"
-#     form_url = "/"
-#     domain = app.config['SITE_URL']
-#     if request.method == 'POST' and form_ward.ds_id.data and form_ward.validate():
-#         constituency_ward = form.ds_id.data
-#         ward_candidates = db.session.query(WardCandidate).filter(WardCandidate.local_authority == form.ds_id.data)\
-#             .order_by(asc(WardCandidate.ward_no)).all()
-#         area_name = "Ward"
-#     elif request.method == 'POST' and form.ds_id.data and form.validate():
-#         constituency = form.ds_id.data
-#         candidates = db.session.query(Candidate).filter(Candidate.constituency == form.ds_id.data).all()
-#         area_name = "Constituency"
-#     return render_template('index.html', form=form, form_ward=form_ward, candidates=candidates, ward_candidates=ward_candidates, area_name=area_name,
-#                            constituency=constituency, constituency_ward=constituency_ward, 
-#                            domain=domain,form_url=form_url)
 
 # @app.route('/local-authority', methods=['GET', 'POST'])
 # def local_authority():
