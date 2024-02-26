@@ -8,7 +8,7 @@ import sys,os
 
 sys.path.append(os.getcwd())
 config = context.config
-database_url = os.environ.get("DATABASE_URL")
+database_url = os.environ.get("DATABASE_URL").replace('%', '%%')
 
 if database_url:
     config.set_main_option("sqlalchemy.url", database_url)
