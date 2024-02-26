@@ -77,6 +77,10 @@ def upgrade() -> None:
     sa.Column('primary_color', sa.String(), nullable=True),
     sa.Column('secondary_color', sa.String(), nullable=True),
     sa.Column('data_schemas', sa.String(), nullable=True),
+    sa.Column('partner_name', sa.String(), nullable=True),
+    sa.Column('partner_website', sa.String(), nullable=True),
+    sa.Column('google_analytics_key', sa.String(), nullable=True),
+    sa.Column('gtag_script', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
 
@@ -89,3 +93,4 @@ def downgrade() -> None:
     # op.drop_table('ward')
     # op.drop_table('candidates')
     op.drop_table('site_settings')
+
