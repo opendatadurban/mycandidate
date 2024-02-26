@@ -56,10 +56,18 @@ def seed_site_settings(db, excel_file_path):
 
 
 def seed_data_tables(db, excel_file_path):
+    """Seed data from the files listed in the `data_schema` column.
+
+    Args:
+        db (session): Database uses sessions and alembic migrations
+        excel_file_path (xlsx): Read from excel file
+    Results: 
+        db: session commited and tables created in the db
+    """
     xls = pd.ExcelFile(f'{excel_file_path}')
     df = pd.read_excel(xls, 'site_settings')
-    for index, row in df[df['title'].notna()].iterrows():
-        if row["title"]:
+    for index, row in df[df['data_schemas'].notna()].iterrows():
+        if row["data_schemas"]:
             # Check if it exists
             instance = db.session.query(Config).filter(
                                 Config.title == row["title"]).filter(
@@ -97,34 +105,25 @@ def seed_data_tables(db, excel_file_path):
         db.session.close()
 
 
-"""
-County Code,County Name,Constituency Code,Constituency Name,Surname,Other Names,Party Code,Political Party Name,Abbrv - national_assembly
-Surname,Other Names,County Code,County Name,Constituency Code,Constituency Name,Ward Code,Ward Name,Party Code,Political Party Name,Abbrv - ward
-County Code,County Name,Surname,Other Names,Party Code,Political Party Name,Abbrv - senate
-County Code,County Name,Surname,Other Names,Party Code,Political Party Name,Abbrv - county_govenor
-County Code,County Name,Surname,Other Names,Party Code,Political Party Name,Abbrv - women
-
-{
-"ward": "county_code",
-"county_name": "county_code",
-"senate": "county_code",
-"national_assembly": "county_code",
-"county_govenor": "county_code"
-}
-"""
-
 def seed_data_candidates(db, excel_file_path):
+    """Generate a candidate table and add a candidate_type column from the `data_schema` object keys and populate the table by candidate_type. 
+    Args:
+        db (session): Database uses sessions and alembic migrations
+        excel_file_path (xlsx): Read from excel file
+    Results: 
+        db: session commited and candidate table created created in the db
+    """
     xls = pd.ExcelFile(f'{excel_file_path}')
     df = pd.read_excel(xls, 'site_settings')
     records = []
     
-    for index, row in df[df['title'].notna()].iterrows():
-        if row["title"]:
+    for index, row in df[df['data_schemas'].notna()].iterrows():
+        if row["data_schemas"]:
             # Check if it exists
-            instance = db.session.query(Config).filter(
-                Config.title == row["title"]).filter(
-                Config.navbar_logo == row["navbar_logo"]
-            ).first()
+            # instance = db.session.query(Config).filter(
+            #     Config.title == row["title"]).filter(
+            #     Config.navbar_logo == row["navbar_logo"]
+            # ).first()
 
             data_schemas = json.loads(row["data_schemas"])
             print(data_schemas)
@@ -145,30 +144,24 @@ def seed_data_candidates(db, excel_file_path):
 
                 # Insert data into the created table
                 for _, row_data in csv_df.iterrows():
-                    row_data_adjusted = {col.replace(' ', '_'): val for col, val in row_data.to_dict().items()}
+                    row_data_adjusted = {col.replace(' ', '_'): val.title() if isinstance(val, str) else val for col, val in row_data.to_dict().items()}
                     row_data_adjusted['candidate_type'] = table_to_candidate_type.get(table_name, 'unknown')
 
-                    record_dict = {f"{table_name}-{col}": f"EXCLUDED.{col}" for col in row_data_adjusted.keys() if col in cleaned_columns}
-                    records.append(record_dict)
-                    # Generate the INSERT INTO candidates query with ON CONFLICT clause
-                    # insert_query = f"""
-                    #     INSERT INTO candidates ({', '.join(row_data_adjusted.keys())})
-                    #     VALUES ({', '.join([':' + col for col in row_data_adjusted.keys()])})
-                    #     ON CONFLICT (Surname, Other_Names) DO UPDATE SET 
-                    #         {', '.join([f"{col} = EXCLUDED.{col}" for col in row_data_adjusted.keys() if col not in ['Surname', 'Other_Names']])};
-                    # """
+                    # Generate the CREATE TABLE candidates query dynamically
+                    create_table_query = f"""
+                        CREATE TABLE IF NOT EXISTS candidates ({', '.join([col + ' TEXT' for col in row_data_adjusted.keys()])})
+                    """
+                    db.session.execute(create_table_query)
 
-                    # Generate the INSERT INTO candidates query with duplicates
-                    # insert_query = f"""
-                    #         INSERT INTO candidates ({', '.join(row_data_adjusted.keys())}) 
-                    #         VALUES ({', '.join([':' + col for col in row_data_adjusted.keys()])})
-                    #         """
-                    # db.session.execute(insert_query, row_data_adjusted)
+                    # Generate the INSERT INTO candidates query
+                    insert_query = f"""
+                        INSERT INTO candidates ({', '.join(row_data_adjusted.keys())}) 
+                        VALUES ({', '.join([':' + col for col in row_data_adjusted.keys()])})
+                    """
+                    db.session.execute(insert_query, row_data_adjusted)
 
     try:
         db.session.commit()
-        with open('extract.json', 'w') as file:
-            json.dump(records, file)
         print("Session commit to db")
     except Exception as e:
         db.session.rollback()
@@ -176,3 +169,4 @@ def seed_data_candidates(db, excel_file_path):
         raise
     finally:
         db.session.close()
+

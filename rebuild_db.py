@@ -25,6 +25,6 @@ excel_file_path = f'{app.root_path}/data/MyCandidate Seed Doc.xlsx'
 # seed_province(db, excel_file_path)
 # seed_ward(db, excel_file_path)
 # seed_candidates(db, excel_file_path)
-# seed_site_settings(db, excel_file_path)
-# seed_data_tables(db, excel_file_path)
+seed_site_settings(db, excel_file_path)
+seed_data_tables(db, excel_file_path)
 seed_data_candidates(db, excel_file_path)
