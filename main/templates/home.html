@@ -58,7 +58,7 @@
     </div>
 
     <div class="grey-wrapper">
-        <ul class="nav nav-tabs" id="candidate-type-list">
+        <ul class="nav nav-tabs" id="candidate-type-list ">
             {% for d in data %}
             <li class=" {% if area_name == d.candidate_type %} active {% endif %}"><a data-toggle="tab" href="#{{d.candidate_type}}">{{d.candidate_type}}</a></li>
             {% endfor %}
@@ -82,7 +82,7 @@
                                         <div class="input-group">
                                             {{ d.form.ds_id(class="form-control", id=id ) }}
                                             <span class="input-group-btn">
-                                                <button type="submit" class="btn btn-primary">Find Candidates</button>
+                                                <button type="submit" class="btn btn-primary" id="submit-btn">Find Candidates</button>
                                             </span>
                                         </div>
                                     </div>
@@ -91,23 +91,23 @@
                                 {% if candidates and candidate.candidate_type == d.candidate_type %}
                                     <div id="results">
                                         {% if d.candidate_type %}
-                                            <h2>{{ d.candidate_type }}: {{ candidate.ward.name }}</h2>
+                                            <h2>{{ d.candidate_type }}: {{ candidate.county_name }}</h2>
 
-                                            <a href="http://www.google.com/search?q={{ candidate.ward.name }}" class="mb-3"
-                                                target="_blank">Get more information for: {{ candidate.ward.name }}</a>
+                                            <a href="http://www.google.com/search?q={{ candidate.county_name }}" class="mb-3"
+                                                target="_blank">Get more information for: {{ candidate.county_name }}</a>
                                             <h2>Your candidates are:</h2>
                                             {% for item in candidates %}
                                                 <div class="item"><a target="_blank"
-                                                        href="http://www.google.co.com/search?q={{ item.person.name }} {{ item.person.surname }}">{{loop.index}}.
-                                                        {{ item.person.name }} {{ item.person.surname }} </a>(Sex: {{ item.person.gender }})
-                                                        {% if item.person.party %} - {{item.person.party.name}}{% endif %} {% if item.ward.code %} -Ward: {{
-                                                            item.ward.code }} {% endif %}</div>
+                                                        href="http://www.google.co.com/search?q={{ item.other_names }} {{ item.surname }}">{{loop.index}}.
+                                                        {{ item.other_names }} {{ item.surname }} </a><!--(Sex: {{ item.gender }})-->
+                                                        {% if item.political_party_name %} - {{item.political_party_name}}{% endif %} {% if item.ward_code %} - Ward: {{
+                                                            item.ward_code }} {% else %} - County: {{item.county_name}} {% endif %}</div>
                                             {% endfor %}
                                             {% for candidate in presidential_candidates %}
                                                 <h2>Your Presidential Candidates are:</h2>
                                                 <div class="item"><a target="_blank"
-                                                        href="http://www.google.co.com/search?q={{ candidate.person.name }} {{ candidate.person.surname }}">{{loop.index}}.
-                                                        {{ candidate.person.name }} </a> - {{ candidate.person.party }}</div>
+                                                        href="http://www.google.co.com/search?q={{ candidate.other_names }} {{ candidate.surname }}">{{loop.index}}.
+                                                        {{ candidate.other_names }} </a> - {{ candidate.political_party_name }}</div>
                                                 {% endfor %}
                                         {% endif %}
                                     </div>
