@@ -58,7 +58,7 @@
     </div>
 
     <div class="grey-wrapper">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs" id="candidate-type-list">
             {% for d in data %}
             <li class=" {% if area_name == d.candidate_type %} active {% endif %}"><a data-toggle="tab" href="#{{d.candidate_type}}">{{d.candidate_type}}</a></li>
             {% endfor %}
@@ -187,6 +187,12 @@
         placeholder: 'Select an option'
     });
     {% endfor %}
+</script>
+<script>
+    const pills  = document.querySelectorAll('#candidate-type-list li')
+    for(let i =0; i<pills.length; i++){
+        pills[i].style.width = `calc(100% / ${pills.length} );`
+    }
 </script>
 
 </html>
