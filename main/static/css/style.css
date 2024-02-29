@@ -34,6 +34,9 @@ body{
 .grey-wrapper .nav-tabs li{
     width: 50%;
     margin-bottom: -2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .grey-wrapper .nav-tabs li a{

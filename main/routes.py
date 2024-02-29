@@ -53,7 +53,7 @@ def home():
     if request.method == 'POST' and request.form['ds_id'] is not None:
         form_id = request.form['ds_id']  
         candidates = get_candidates(form_id, db)
-        area_name = candidates[0]['candidate_type']
+        area_name = request.form['candidate_type']
         print(form_id, area_name)
         candidate_query = """
             SELECT * FROM candidates
