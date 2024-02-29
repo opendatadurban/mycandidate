@@ -155,18 +155,15 @@ class Candidate(Base):
     
 def create_form(candidate_type):
     class CandidatesForm(Form):
-        ds_id = SelectField('Ward', [validators.DataRequired()])
+        ds_id = SelectField('Country', [validators.DataRequired()])
 
         def __init__(self, *args, **kwargs):
             super(CandidatesForm, self).__init__(*args, **kwargs)
             retrieve_query = f"SELECT * FROM candidates WHERE candidate_type = '{candidate_type}'"
             result = db.session.execute(retrieve_query) 
-            assurances = [
-                (assurance["county_code"], f'{assurance["county_code"]} - {assurance["county_name"]}')
-                for assurance in result
-            ]
-            assurances.insert(0, ("",""))
-            self.ds_id.choices = assurances
+            self.ds_id.choices = [(assurance.county_code, f'{assurance.county_code} - {assurance.county_name}')
+                                  for assurance in result]
+            self.ds_id.choices.insert(0, ("", ""))
 
         def validate(self):
             return super(CandidatesForm, self).validate()

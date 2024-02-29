@@ -104,7 +104,7 @@ def seed_data_tables(db, excel_file_path):
     finally:
         db.session.close()
 
-
+from collections import Counter
 def seed_data_candidates(db, excel_file_path):
     """Generate a candidate table and add a candidate_type column from the `data_schema` object keys and populate the table by candidate_type. 
     Args:
@@ -129,6 +129,7 @@ def seed_data_candidates(db, excel_file_path):
             print(data_schemas)
             for table_name, csv_filename in data_schemas.items():
                 print("Table: ", table_name)
+                    
                 # Dictionary to map table names to candidate types
                 table_to_candidate_type = {
                     table_name: table_name,
@@ -141,11 +142,16 @@ def seed_data_candidates(db, excel_file_path):
                 csv_df = pd.read_csv(file_root, quotechar='"')
 
                 cleaned_columns = [col.replace(' ', '_') for col in csv_df.columns]
+                if table_name != 'ward':
+                    common_column = Counter(cleaned_columns).most_common(1)[0][0]
+                    candidate_type = common_column.lower()
+                    print("Type", candidate_type)
 
                 # Insert data into the created table
                 for _, row_data in csv_df.iterrows():
                     row_data_adjusted = {col.replace(' ', '_'): val.title() if isinstance(val, str) else val for col, val in row_data.to_dict().items()}
                     row_data_adjusted['candidate_type'] = table_to_candidate_type.get(table_name, 'unknown')
+                    row_data_adjusted['most_common'] = candidate_type if table_name != 'ward' else 'ward_code'
 
                     # Generate the CREATE TABLE candidates query dynamically
                     create_table_query = f"""

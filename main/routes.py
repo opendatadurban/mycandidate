@@ -45,23 +45,27 @@ def home():
     form_id = None
     form_url = "/"
     data = get_data()
-    area_name = data[0]['candidate_type']
+    area_name = None
     config_queryset = db.session.query(Config).first()
     config = config_queryset.json()
+    if request.method == 'GET' :
+        area_name = data[0]['candidate_type']
+        print(area_name)
 
-    # print(request.form['ds_id'])
+
     if request.method == 'POST' and request.form['ds_id'] is not None:
         form_id = request.form['ds_id']  
         candidates = get_candidates(form_id, db)
-        area_name = candidates[0]['candidate_type']
+        area_name = next(i['candidate_type'] for i in data if candidates[0]['candidate_type'] in i['candidate_type'])
+        print(candidates[0])
+        # area_name = candidates[0]['candidate_type'] # Should be passed as param
         print(form_id, area_name)
         candidate_query = """
             SELECT * FROM candidates
             WHERE county_code = :form_id
-            AND candidate_type = :area_name
             LIMIT 1
         """
-        params = {'form_id': form_id, 'area_name': area_name}
+        params = {'form_id': form_id}
         candidate_result = db.session.execute(candidate_query, params)
         candidate = candidate_result.fetchone()
         print(candidate)
@@ -78,18 +82,3 @@ def home():
             area_name = area_name
         )
 
-
-# @app.route('/local-authority', methods=['GET', 'POST'])
-# def local_authority():
-#     form_url="/local-authority"
-#     form = WardCandidateForm()
-#     area_name = "Ward"
-#     candidates = False
-#     constituency = False
-#     domain = app.config['SITE_URL']
-#     if request.method == 'POST' and form.validate():
-#         constituency = form.ds_id.data
-#         candidates = db.session.query(WardCandidate).filter(WardCandidate.local_authority == form.ds_id.data)\
-#             .order_by(asc(WardCandidate.ward_no)).all()
-#     return render_template('ward_layout.html', form=form,candidates=candidates,area_name=area_name,
-#                            constituency=constituency,domain=domain,form_url=form_url)

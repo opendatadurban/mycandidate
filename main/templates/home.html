@@ -60,7 +60,7 @@
     <div class="grey-wrapper">
         <ul class="nav nav-tabs">
             {% for d in data %}
-            <li class=" {% if area_name == d.candidate_type %} active {% endif %}"><a data-toggle="tab" href="#{{d.candidate_type}}">{{d.candidate_type}}</a></li>
+            <li class="{% if area_name == d.candidate_type %} active {% endif %}"><a data-toggle="tab" href="#{{d.candidate_type}}">{{d.candidate_type.replace('_', ' ').capitalize()}}</a></li>
             {% endfor %}
         </ul>
     </div>
@@ -69,16 +69,16 @@
         <div class="container">
             <div class="row">
                 {% for d in data %}
-                    <div id="{{d.candidate_type}}" class=" tab-pane fade {% if area_name == d.candidate_type  %} active in {% endif %}">
+                <div id="{{d.candidate_type}}" class=" tab-pane fade {% if area_name == d.candidate_type  %} active in {% endif %}">
                         <div class="panel panel-info">
-                            <div class="panel-heading">Find out who is contesting in your {{d.candidate_type}}</div>
+                            <div class="panel-heading">Find out who is contesting in your {{d.candidate_type.replace('_', ' ').capitalize()}}</div>
                             <div class="panel-body">
                                 <form action="/" method="POST">
                                     {{ d.form.csrf_token }}
                                     {{ d.form.hidden_tag() }}
                                     {% set id = 'js-example-basic-single-' + loop.index|string %}
                                     <div class="form-group">
-                                        <label class="control-label" for="address">Search your {{d.candidate_type}}:</label>
+                                        <label class="control-label" for="address">Search your {{d.candidate_type.replace('_', ' ').capitalize()}}:</label>
                                         <div class="input-group">
                                             {{ d.form.ds_id(class="form-control", id=id ) }}
                                             <span class="input-group-btn">
@@ -100,8 +100,8 @@
                                                 <div class="item"><a target="_blank"
                                                         href="http://www.google.co.com/search?q={{ item.other_names }} {{ item.surname }}">{{loop.index}}.
                                                         {{ item.other_names }} {{ item.surname }} </a><!--(Sex: {{ item.gender }})-->
-                                                        {% if item.political_party_name %} - {{item.political_party_name}}{% endif %} {% if item.ward_code %} - Ward: {{
-                                                            item.ward_code }} {% else %} - County: {{item.county_name}} {% endif %}</div>
+                                                        {% if item.political_party_name %} - {{item.political_party_name}}{% endif %} {% if item.ward_code %} - Ward: 
+                                                        {{ item.ward_code }} {% else %} - County: {{item.county_name}} {% endif %}</div>
                                             {% endfor %}
                                             {% for candidate in presidential_candidates %}
                                                 <h2>Your Presidential Candidates are:</h2>
