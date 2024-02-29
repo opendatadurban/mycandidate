@@ -68,7 +68,7 @@
     <div class="grey-wrapper">
         <ul class="nav nav-tabs" id="candidate-type-list ">
             {% for d in data %}
-            <li id="nav-{{loop.index}}" class=" {% if area_name == d.candidate_type %} active {% endif %}" style="width: {{100/data|length}}%;"><a data-toggle="tab" href="#{{d.candidate_type}}">{{d.candidate_type}}</a></li>
+            <li id="nav-{{loop.index}}" class=" {% if area_name == d.candidate_type %} active {% endif %}" style="width: {{100/data|length}}%;"><a data-toggle="tab" href="#{{d.candidate_type}}">{{d.candidate_type.replace('_', ' ').title()}}</a></li>
             {% endfor %}
         </ul>
     </div>
@@ -79,14 +79,14 @@
                 {% for d in data %}
                     <div id="{{d.candidate_type}}" class=" tab-pane fade {% if area_name == d.candidate_type  %} active in {% endif %}">
                         <div class="panel panel-info">
-                            <div class="panel-heading">Find out who is contesting in your {{d.candidate_type}}</div>
+                            <div class="panel-heading">Find out who is contesting in your {{d.candidate_type.replace('_', ' ').title()}}</div>
                             <div class="panel-body">
                                 <form action="/" method="POST">
                                     {{ d.form.csrf_token }}
                                     {{ d.form.hidden_tag() }}
                                     {% set id = 'js-example-basic-single-' + loop.index|string %}
                                     <div class="form-group">
-                                        <label class="control-label" for="address">Search your {{d.candidate_type}}:</label>
+                                        <label class="control-label" for="address">Search your {{d.candidate_type.replace('_', ' ').title()}}:</label>
                                         <div class="input-group">
                                             {{ d.form.ds_id(class="form-control", id=id ) }}
                                             <input type="text" name="candidate_type" value="{{d.candidate_type}}" hidden>
@@ -100,7 +100,7 @@
                                 {% if candidates and candidate.candidate_type == d.candidate_type %}
                                     <div id="results">
                                         {% if d.candidate_type %}
-                                            <h2>{{ d.candidate_type }}: {{ candidate.county_name }}</h2>
+                                            <h2>{{ d.candidate_type.replace('_', ' ').title() }}: {{ candidate.county_name }}</h2>
 
                                             <a href="http://www.google.com/search?q={{ candidate.county_name }}" class="mb-3"
                                                 target="_blank">Get more information for: {{ candidate.county_name }}</a>

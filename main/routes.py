@@ -54,7 +54,7 @@ def home():
         form_id = request.form['ds_id']  
         candidates = get_candidates(form_id, db)
         area_name = request.form['candidate_type']
-        print(form_id, area_name)
+        # print(form_id, area_name)
         candidate_query = """
             SELECT * FROM candidates
             WHERE county_code = :form_id
@@ -64,7 +64,7 @@ def home():
         params = {'form_id': form_id, 'area_name': area_name}
         candidate_result = db.session.execute(candidate_query, params)
         candidate = candidate_result.fetchone()
-        print(candidate)
+        # print(candidate)
         
     return render_template(
             'home.html', 
