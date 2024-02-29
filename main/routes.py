@@ -56,10 +56,8 @@ def home():
     if request.method == 'POST' and request.form['ds_id'] is not None:
         form_id = request.form['ds_id']  
         candidates = get_candidates(form_id, db)
-        area_name = next(i['candidate_type'] for i in data if candidates[0]['candidate_type'] in i['candidate_type'])
-        print(candidates[0])
-        # area_name = candidates[0]['candidate_type'] # Should be passed as param
-        print(form_id, area_name)
+        area_name = request.form['candidate_type']
+        # print(form_id, area_name)
         candidate_query = """
             SELECT * FROM candidates
             WHERE county_code = :form_id
@@ -68,7 +66,7 @@ def home():
         params = {'form_id': form_id}
         candidate_result = db.session.execute(candidate_query, params)
         candidate = candidate_result.fetchone()
-        print(candidate)
+        # print(candidate)
         
     return render_template(
             'home.html', 
