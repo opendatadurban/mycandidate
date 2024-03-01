@@ -4,6 +4,47 @@ from .app import app
 from sqlalchemy import asc
 from .decorators import requires_auth, get_candidates
 
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    candidates = None
+    candidate = None
+    presidential_candidates = []
+    form_id = None
+    form_url = "/"
+    data = get_data()
+    area_name = data[0]['candidate_type']
+    config_queryset = db.session.query(Config).first()
+    config = config_queryset.json()
+
+    if request.method == 'POST' and request.form['ds_id'] is not None:
+        form_id = request.form['ds_id']  
+        area_name = request.form['candidate_type']
+        candidates, code = get_candidates(form_id, db, area_name)
+        # print("final result", candidates[0:2])
+        # print(form_id, area_name)
+        candidate_query = f"""
+            SELECT * FROM candidates
+            WHERE {code} = :form_id
+            AND candidate_type = :area_name
+            LIMIT 1
+        """
+        params = {'form_id': form_id, "area_name": area_name}
+        candidate_result = db.session.execute(candidate_query, params)
+        candidate = candidate_result.fetchone()
+        # print(candidate)
+        
+    return render_template(
+            'home.html', 
+            candidates=candidates,
+            presidential_candidates = presidential_candidates,
+            candidate = candidate,
+            ward=form_id, 
+            form_url=form_url,
+            data = data,
+            config=config,
+            area_name = area_name
+        )
+
 # Predefined secret key for authentication
 # predefined_secret_key = app.config['CLIENT_SECRET_KEY']
 
@@ -35,48 +76,3 @@ from .decorators import requires_auth, get_candidates
 # @requires_auth
 # def dashboard():
 #     return render_template('dashboard.html')
-
-
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    candidates = None
-    candidate = None
-    presidential_candidates = []
-    form_id = None
-    form_url = "/"
-    data = get_data()
-    area_name = None
-    config_queryset = db.session.query(Config).first()
-    config = config_queryset.json()
-    if request.method == 'GET' :
-        area_name = data[0]['candidate_type']
-        print(area_name)
-
-
-    if request.method == 'POST' and request.form['ds_id'] is not None:
-        form_id = request.form['ds_id']  
-        candidates = get_candidates(form_id, db)
-        area_name = request.form['candidate_type']
-        # print(form_id, area_name)
-        candidate_query = """
-            SELECT * FROM candidates
-            WHERE county_code = :form_id
-            LIMIT 1
-        """
-        params = {'form_id': form_id}
-        candidate_result = db.session.execute(candidate_query, params)
-        candidate = candidate_result.fetchone()
-        # print(candidate)
-        
-    return render_template(
-            'home.html', 
-            candidates=candidates,
-            presidential_candidates = presidential_candidates,
-            candidate = candidate,
-            ward=form_id, 
-            form_url=form_url,
-            data = data,
-            config=config,
-            area_name = area_name
-        )
-
