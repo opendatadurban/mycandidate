@@ -104,7 +104,7 @@ def seed_data_tables(db, excel_file_path):
     finally:
         db.session.close()
 
-
+from collections import Counter
 def seed_data_candidates(db, excel_file_path):
     """Generate a candidate table and add a candidate_type column from the `data_schema` object keys and populate the table by candidate_type. 
     Args:
@@ -119,16 +119,16 @@ def seed_data_candidates(db, excel_file_path):
     
     for index, row in df[df['data_schemas'].notna()].iterrows():
         if row["data_schemas"]:
-            # Check if it exists
-            # instance = db.session.query(Config).filter(
-            #     Config.title == row["title"]).filter(
-            #     Config.navbar_logo == row["navbar_logo"]
-            # ).first()
-
-            data_schemas = json.loads(row["data_schemas"])
+            try:
+                # Directly use the string as a dictionary
+                data_schemas = json.loads(row["data_schemas"])
+            except Exception as e:
+                data_schemas = eval(row["data_schemas"])
+                print("Error:", e)
             print(data_schemas)
             for table_name, csv_filename in data_schemas.items():
                 print("Table: ", table_name)
+                    
                 # Dictionary to map table names to candidate types
                 table_to_candidate_type = {
                     table_name: table_name,
@@ -137,16 +137,18 @@ def seed_data_candidates(db, excel_file_path):
                     table_name: table_name,
                     table_name: table_name
                 }
-                file_root = f'{app.root_path}/data/{csv_filename}'
+                file_root = f'{app.root_path}/data/{csv_filename["file"]}'
                 csv_df = pd.read_csv(file_root, quotechar='"')
 
                 cleaned_columns = [col.replace(' ', '_') for col in csv_df.columns]
 
+                locator_values = [col for col in csv_filename["locator"]]
                 # Insert data into the created table
                 for _, row_data in csv_df.iterrows():
                     row_data_adjusted = {col.replace(' ', '_'): val.title() if isinstance(val, str) else val for col, val in row_data.to_dict().items()}
                     row_data_adjusted['candidate_type'] = table_to_candidate_type.get(table_name, 'unknown')
-
+                    row_data_adjusted['locator'] = locator_values
+                    # print(row_data_adjusted)
                     # Generate the CREATE TABLE candidates query dynamically
                     create_table_query = f"""
                         CREATE TABLE IF NOT EXISTS candidates ({', '.join([col + ' TEXT' for col in row_data_adjusted.keys()])})
@@ -159,6 +161,9 @@ def seed_data_candidates(db, excel_file_path):
                         VALUES ({', '.join([':' + col for col in row_data_adjusted.keys()])})
                     """
                     db.session.execute(insert_query, row_data_adjusted)
+        else:
+            print("no such column")
+            continue
 
     try:
         db.session.commit()
@@ -169,4 +174,3 @@ def seed_data_candidates(db, excel_file_path):
         raise
     finally:
         db.session.close()
-
