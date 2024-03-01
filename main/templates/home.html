@@ -108,9 +108,10 @@
                                             {% for item in candidates %}
                                                 <div class="item"><a target="_blank"
                                                         href="http://www.google.co.com/search?q={{ item.other_names }} {{ item.surname }}">{{loop.index}}.
-                                                        {{ item.other_names }} {{ item.surname }} </a><!--(Sex: {{ item.gender }})-->
-                                                        {% if item.political_party_name %} - {{item.political_party_name}}{% endif %} {% if item.ward_code %} - Ward: 
-                                                        {{ item.ward_code }} {% else %} - County: {{item.county_name}} {% endif %}</div>
+                                                        {{ item.other_names }} </a><!--(Sex: {{ item.gender }})-->
+                                                        {%set item_name = item.locator.strip("{}").split(',')[0] %}
+                                                        {%set item_code = item.locator.strip("{}").split(',')[1] %}
+                                                        {% if item.political_party_name %} - {{item.political_party_name}}{% endif %} - Ward: {{item[item_name]}} - {{item[item_code]}}</div>
                                             {% endfor %}
                                             {% for candidate in presidential_candidates %}
                                                 <h2>Your Presidential Candidates are:</h2>
