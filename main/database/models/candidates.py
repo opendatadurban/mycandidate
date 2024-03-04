@@ -15,7 +15,6 @@ def create_form(candidate_type, code, name):
             super(CandidatesForm, self).__init__(*args, **kwargs)
             query = text(f"SELECT DISTINCT {code}, {name} FROM candidates WHERE candidate_type = :candidate_type")
             assurances = db.session.execute(query, {'candidate_type': candidate_type}).fetchall()
-            # print(assurances)
             self.ds_id.choices = [(assurance[0], f'{assurance[1]} - {assurance[0]}')
                                   for assurance in assurances]
             self.ds_id.choices.insert(0, ("", ""))

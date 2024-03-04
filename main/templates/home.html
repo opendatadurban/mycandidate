@@ -111,7 +111,7 @@
                                                         {{ item.other_names }} </a><!--(Sex: {{ item.gender }})-->
                                                         {%set item_name = item.locator.strip("{}").split(',')[0] %}
                                                         {%set item_code = item.locator.strip("{}").split(',')[1] %}
-                                                        {% if item.political_party_name %} - {{item.political_party_name}}{% endif %} - Ward: {{item[item_name]}} - {{item[item_code]}}</div>
+                                                        {% if item.political_party_name %} - {{item.political_party_name}}{% endif %} - {{item_name.split('_')[0].title()}}: {{item[item_name]}} - {{item[item_code]}}</div>
                                             {% endfor %}
                                             {% for candidate in presidential_candidates %}
                                                 <h2>Your Presidential Candidates are:</h2>

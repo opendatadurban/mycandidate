@@ -54,56 +54,6 @@ def seed_site_settings(db, excel_file_path):
     except Exception as e:
         print(e)    
 
-
-def seed_data_tables(db, excel_file_path):
-    """Seed data from the files listed in the `data_schema` column.
-
-    Args:
-        db (session): Database uses sessions and alembic migrations
-        excel_file_path (xlsx): Read from excel file
-    Results: 
-        db: session commited and tables created in the db
-    """
-    xls = pd.ExcelFile(f'{excel_file_path}')
-    df = pd.read_excel(xls, 'site_settings')
-    for index, row in df[df['data_schemas'].notna()].iterrows():
-        if row["data_schemas"]:
-            # Check if it exists
-            instance = db.session.query(Config).filter(
-                                Config.title == row["title"]).filter(
-                                    Config.navbar_logo == row["navbar_logo"]
-                                ).first()
-            
-            data_schemas = json.loads(instance.data_schemas)
-            print(data_schemas)
-            for table_name, csv_filename in data_schemas.items():
-                print("Table: ", table_name)
-                file_root = f'{app.root_path}/data/{csv_filename}'
-                csv_df = pd.read_csv(file_root, quotechar='"')
-                
-                cleaned_columns = [col.replace(' ', '_') for col in csv_df.columns]
-
-                # Generate the CREATE TABLE query
-                create_table_query = f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join([col + ' TEXT' for col in cleaned_columns])})"
-                db.session.execute(create_table_query)
-                
-                # Insert data into the created table
-                for _, row_data in csv_df.iterrows():
-                    row_data_adjusted = {col.replace(' ', '_'): val for col, val in row_data.to_dict().items()}
-                    insert_query = f"INSERT INTO {table_name} VALUES ({', '.join([':' + col.replace(' ', '_') for col in cleaned_columns])})"
-
-                    # print(row_data_adjusted)
-                    db.session.execute(insert_query, row_data_adjusted)
-    try:
-        db.session.commit()
-        print("Session commit to db")
-    except Exception as e:
-        db.session.rollback()
-        print("DB exception: ", e)
-        raise
-    finally:
-        db.session.close()
-
 from collections import Counter
 def seed_data_candidates(db, excel_file_path):
     """Generate a candidate table and add a candidate_type column from the `data_schema` object keys and populate the table by candidate_type. 
