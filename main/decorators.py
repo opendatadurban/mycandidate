@@ -20,18 +20,19 @@ def get_candidates(form_id, db, area_name):
 
     rows_as_dicts = []
     for row in distinct_types_result:
-        most_common_values = row[1].strip("{}").split(',')
-        code = most_common_values[0]
-        name = most_common_values[1]
-        retrieve_query = f"""SELECT * FROM candidates 
-                WHERE {code} = :form_id 
-                AND candidate_type = :area_name
-            """ 
-        params = {'form_id': form_id, "area_name": area_name}
-        result = db.session.execute(retrieve_query, params) 
-        column_names = result.keys()
-        for row in result:
-            row_dict = dict(zip(column_names, row))
-            rows_as_dicts.append(row_dict)
+        if row[0] == area_name:
+            most_common_values = row[1].strip("{}").split(',')
+            code = most_common_values[0]
+            name = most_common_values[1]
+            retrieve_query = f"""SELECT * FROM candidates 
+                    WHERE {code} = :form_id 
+                    AND candidate_type = :area_name
+                """ 
+            params = {'form_id': form_id, "area_name": area_name}
+            result = db.session.execute(retrieve_query, params) 
+            column_names = result.keys()
+            for row in result:
+                row_dict = dict(zip(column_names, row))
+                rows_as_dicts.append(row_dict)
 
     return rows_as_dicts, code
