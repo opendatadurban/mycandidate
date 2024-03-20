@@ -29,6 +29,7 @@ def seed_site_settings(db, excel_file_path):
                 break
 
             if not found_matching_config:
+                print('creating new')
                 config = Config(
                     title=row["title"],
                     title_short=row["title_short"],
@@ -40,7 +41,9 @@ def seed_site_settings(db, excel_file_path):
                     partner_name=row["partner_name"] if row["partner_name"] else None,
                     partner_website=row["partner_website"] if row["partner_website"] else None,	
                     google_analytics_key=row["google_analytics_key"] if row["google_analytics_key"] else None,	
-                    gtag_script=row["gTag_script"] if row["gTag_script"] else None
+                    gtag_script=row["gTag_script"] if row["gTag_script"] else None,
+                    organization_name=row["organization_name"] if row["organization_name"] else None,
+                    organization_link=row["organization_link"] if row["organization_link"] else None
                 )
             
                 # Dynamically handle additional columns
