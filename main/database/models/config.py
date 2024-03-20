@@ -22,6 +22,8 @@ class Config(Base):
     partner_website = Column(String)
     google_analytics_key = Column(String)
     gtag_script = Column(String)
+    organization_name = Column(String)
+    organization_link = Column(String)
 
     def __repr__(self):
         return f'<id {self.id}>'
@@ -38,5 +40,7 @@ class Config(Base):
             'partner_name': self.partner_name,
             'partner_website': self.partner_website,
             'google_analytics_key': self.google_analytics_key,
-            'gtag_script': self.gtag_script
+            'gtag_script': self.gtag_script,
+            'organization_name': self.organization_name,
+            'organization_link': self.organization_link,
         }
