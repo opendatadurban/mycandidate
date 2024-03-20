@@ -82,7 +82,7 @@
                 {% for d in data %}
                 <div id="{{d.candidate_type}}" class=" tab-pane fade {% if area_name == d.candidate_type  %} active in {% endif %}">
                         <div class="panel panel-info">
-                            <div class="panel-heading">Find out who is contesting in your {{d.candidate_type.replace('_', ' ').title()}}</div>
+                            <div class="panel-heading">Find out who is contesting</div>
                             <div class="panel-body">
                                 <form action="/" method="POST">
                                     {{ d.form.csrf_token }}
