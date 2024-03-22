@@ -37,8 +37,10 @@
     }
     .footer-below .btn.btn-mini.btn-primary{
         background: transparent;
+        padding: 20px;
         border-color:{{config.secondary_color}} ;
         color: {{config.secondary_color}};
+        
     }
 </style>
 
@@ -56,6 +58,7 @@
 <body>
     <div class="nav-heading">
         <div class="container">
+            <a href="/" class="trigger"></a>
             <div class="row">
                 <div class="col-12">
                     <h5 class="light-title">MyCandidate</h5>
@@ -79,14 +82,14 @@
                 {% for d in data %}
                 <div id="{{d.candidate_type}}" class=" tab-pane fade {% if area_name == d.candidate_type  %} active in {% endif %}">
                         <div class="panel panel-info">
-                            <div class="panel-heading">Find out who is contesting in your {{d.candidate_type.replace('_', ' ').title()}}</div>
+                            <div class="panel-heading">Find out who is contesting</div>
                             <div class="panel-body">
                                 <form action="/" method="POST">
                                     {{ d.form.csrf_token }}
                                     {{ d.form.hidden_tag() }}
                                     {% set id = 'js-example-basic-single-' + loop.index|string %}
                                     <div class="form-group">
-                                        <label class="control-label" for="address">Search your {{d.candidate_type.replace('_', ' ').title()}}:</label>
+                                        <label class="control-label" for="address">Search for your {{d.candidate_type.replace('_', ' ').title()}} candidates:</label>
                                         <div class="input-group">
                                             {{ d.form.ds_id(class="form-control", id=id ) }}
                                             <input type="text" name="candidate_type" value="{{d.candidate_type}}" hidden>
@@ -144,7 +147,7 @@
                 </div>
                 <br>
                 <div class="col-lg-12 font-style" style="">
-                    A collaboration between:</br> <a target="_blank" href="">{{config.organisation}}</a> and <a target="_blank"
+                    A collaboration between:</br> <a target="_blank" href="https://{{config.organization_link}}">{{config.organization_name}}</a> and <a target="_blank"
                         href="https://opencitieslab.org">Open Cities Lab</a> </br></br>
 
                     <p>We respect your privacy!</p>

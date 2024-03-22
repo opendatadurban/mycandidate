@@ -90,7 +90,7 @@ body{
     color: #FFFFFF;
 }
 
-select2-selection__renderedselect2-selection__placeholder{
+.select2-selection__renderedselect2-selection__placeholder{
     color: #878787;
     font-family: 'Montserrat';
     font-size: 14px;
@@ -115,7 +115,10 @@ select2-selection__renderedselect2-selection__placeholder{
     height: 42px;
     border-bottom-left-radius: 3px;
     border-top-left-radius: 3px;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
     padding: 5px 0;
+    border-color: #FFF;
 }
 
 .tab-content .panel.panel-info .btn.btn-primary{
@@ -184,6 +187,8 @@ select2-selection__renderedselect2-selection__placeholder{
 .footer-below {
     background-color: #2F3542;
     padding: 30px 0;
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 .footer-below .btn.btn-mini.btn-primary{
@@ -233,13 +238,34 @@ select2-selection__renderedselect2-selection__placeholder{
 .tab-content .select2.select2-container{
     width: 100% !important;
 }
-
+.nav-heading .container{
+    position: relative;
+}
+.nav-heading .container .trigger{
+    position: absolute;
+    width: 200px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+}
 
 @media (max-width: 768px) {
     .grey-wrapper .nav-tabs li.active a{
         min-height: 70px;
     }
+    .grey-wrapper .nav-tabs li a{
+        min-height: 70px;
+    }
     .nav-heading .light-title, .nav-heading .purple-tittle{
-        padding-left: 30px;
+        padding-left: 20px;
+    }
+    .panel-body, .panel-heading{
+        padding: 20px;
+    }
+}
+
+@media (min-width: 768px) {
+    .panel-body, .panel-heading{
+        padding-left: 0;
     }
 }
