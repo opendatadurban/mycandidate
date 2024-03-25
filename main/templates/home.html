@@ -110,7 +110,7 @@
                                             <h2>Your candidates are:</h2>
                                             {% for item in candidates %}
                                                 <div class="item"><a target="_blank"
-                                                        href="http://www.google.co.com/search?q={{ item.other_names }} {{ item.surname }}">{{loop.index}}.
+                                                        href="http://www.google.com/search?q={{ item.other_names }} {{ item.surname }}">{{loop.index}}.
                                                         {{ item.other_names }} </a><!--(Sex: {{ item.gender }})-->
                                                         {%set item_name = item.locator.strip("{}").split(',')[0] %}
                                                         {%set item_code = item.locator.strip("{}").split(',')[1] %}
@@ -119,7 +119,7 @@
                                             {% for candidate in presidential_candidates %}
                                                 <h2>Your Presidential Candidates are:</h2>
                                                 <div class="item"><a target="_blank"
-                                                        href="http://www.google.co.com/search?q={{ candidate.other_names }} {{ candidate.surname }}">{{loop.index}}.
+                                                        href="http://www.google.com/search?q={{ candidate.other_names }} {{ candidate.surname }}">{{loop.index}}.
                                                         {{ candidate.other_names }} </a> - {{ candidate.political_party_name }}</div>
                                                 {% endfor %}
                                         {% endif %}
