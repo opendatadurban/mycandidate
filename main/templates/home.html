@@ -89,7 +89,7 @@
                                     {{ d.form.hidden_tag() }}
                                     {% set id = 'js-example-basic-single-' + loop.index|string %}
                                     <div class="form-group">
-                                        <label class="control-label" for="address">Search for your {{d.candidate_type.replace('_', ' ').title()}} candidates:</label>
+                                        <label class="control-label" for="address">Search:</label>
                                         <div class="input-group">
                                             {{ d.form.ds_id(class="form-control", id=id ) }}
                                             <input type="text" name="candidate_type" value="{{d.candidate_type}}" hidden>
@@ -175,7 +175,7 @@
                 <div class="modal-body">
                     <div id="results">
                         <p><code id="clipboardExample1">
-                        &lt;iframe src="{{ domain }}{{ form_url }}" style="border: none;width: 100%; height:
+                        &lt;iframe src="{{ domain }}" style="border: none;width: 100%; height:
                         400px"&gt;&lt;/iframe&gt;
                     </code></p>
                     </div>
