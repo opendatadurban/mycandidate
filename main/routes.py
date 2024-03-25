@@ -15,7 +15,6 @@ def home():
     area_name = data[0]['candidate_type']
     config_queryset = db.session.query(Config).first()
     config = config_queryset.json()
-
     if request.method == 'POST' and request.form['ds_id'] is not None:
         form_id = request.form['ds_id']  
         area_name = request.form['candidate_type']
@@ -42,5 +41,6 @@ def home():
             form_url=form_url,
             data = data,
             config=config,
-            area_name = area_name
+            area_name = area_name,
+            domain = request.url_root
         )
