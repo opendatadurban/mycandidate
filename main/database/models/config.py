@@ -13,10 +13,13 @@ class Config(Base):
     id = Column(Integer, autoincrement=True, primary_key=True)
     title = Column(String)
     title_short = Column(String)
-    navbar_logo = Column(String)
     favicon_logo = Column(String)
-    primary_color = Column(String)
-    secondary_color = Column(String)
+    logo_colour = Column(String)
+    footer_colour = Column(String)
+    body_foreground_colour = Column(String)
+    body_background_colour = Column(String)
+    find_candidates_button = Column(String)
+    candidate_names_colour = Column(String)
     data_schemas = Column(String)
     partner_name = Column(String)
     partner_website = Column(String)
@@ -33,10 +36,13 @@ class Config(Base):
             'id': self.id,
             'title': self.title,
             'short_title': self.title_short,
-            'navbar_logo': self.navbar_logo,
             'favicon_logo': self.favicon_logo,
-            'primary_color': self.primary_color,
-            'secondary_color': self.secondary_color,
+            'logo_colour': self.logo_colour,
+            'footer_colour': self.footer_colour,
+            'body_foreground_colour': self.body_foreground_colour,
+            'body_background_colour': self.body_background_colour,
+            'find_candidates_button': self.find_candidates_button,
+            'candidate_names_colour': self.candidate_names_colour,
             'partner_name': self.partner_name,
             'partner_website': self.partner_website,
             'google_analytics_key': self.google_analytics_key,

@@ -23,7 +23,6 @@ def get_candidates(form_id, db, area_name):
         if row[0] == area_name:
             most_common_values = row[1].strip("{}").split(',')
             code = most_common_values[0]
-            name = most_common_values[1]
             retrieve_query = f"""SELECT * FROM candidates 
                     WHERE {code} = :form_id 
                     AND candidate_type = :area_name
