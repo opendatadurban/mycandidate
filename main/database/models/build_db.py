@@ -16,7 +16,7 @@ def seed_site_settings(db, excel_file_path):
             # Check if it exists
             instance = db.session.query(Config).filter(
                                 Config.title == row["title"]).filter(
-                                    Config.navbar_logo == row["navbar_logo"]
+                                    Config.favicon_logo == row["favicon_link"]
                                 ).first()
 
             # Flag to track if a matching province is found in records
@@ -33,10 +33,13 @@ def seed_site_settings(db, excel_file_path):
                 config = Config(
                     title=row["title"],
                     title_short=row["title_short"],
-                    navbar_logo=row["navbar_logo"],
                     favicon_logo=row["favicon_link"],
-                    primary_color=row["primary_colour"],
-                    secondary_color=row["secondary_colour"],
+                    logo_colour=row["logo_colour"],
+                    footer_colour=row["footer_colour"],
+                    body_foreground_colour=row["body_foreground_colour"],
+                    body_background_colour=row["body_background_colour"],
+                    find_candidates_button=row["find_candidates_button"],
+                    candidate_names_colour=row["candidate_names_colour"],
                     data_schemas=row["data_schemas"],
                     partner_name=row["partner_name"] if row["partner_name"] else None,
                     partner_website=row["partner_website"] if row["partner_website"] else None,	
@@ -48,7 +51,7 @@ def seed_site_settings(db, excel_file_path):
             
                 # Dynamically handle additional columns
                 for column in df.columns:
-                    if column not in ["title", "title_short", "navbar_logo", "favicon_link", "primary_colour", "secondary_colour"]:
+                    if column not in ["title", "title_short", "favicon_link", "primary_colour", "secondary_colour"]:
                         setattr(config, column, row[column])
                         # print(column, row[column])
                 db.session.add(config)

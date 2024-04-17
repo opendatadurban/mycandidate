@@ -13,10 +13,18 @@ def create_form(candidate_type, code, name):
 
         def __init__(self, *args, **kwargs):
             super(CandidatesForm, self).__init__(*args, **kwargs)
-            query = text(f"SELECT DISTINCT {code}, {name} FROM candidates WHERE candidate_type = :candidate_type")
+            query = None
+            if name is not None:
+                query = text(f"SELECT DISTINCT {code}, {name} FROM candidates WHERE candidate_type = :candidate_type")
+            else:
+                query = text(f"SELECT DISTINCT {code} FROM candidates WHERE candidate_type = :candidate_type")
             assurances = db.session.execute(query, {'candidate_type': candidate_type}).fetchall()
-            self.ds_id.choices = [(assurance[0], f'{assurance[1]} - {assurance[0]}')
-                                  for assurance in assurances]
+
+            if name is not None:
+                self.ds_id.choices = [(assurance[0], f'{assurance[1]} - {assurance[0]}') for assurance in assurances]
+            else:
+                self.ds_id.choices = [(assurance[0], str(assurance[0])) for assurance in assurances]
+
             self.ds_id.choices.insert(0, ("", ""))
 
         def validate(self):
@@ -37,7 +45,7 @@ def get_data():
         most_common_values = row[1].strip("{}").split(',')
         candidate_type = row[0]
         code = most_common_values[0]
-        name = most_common_values[1]
+        name = most_common_values[1] if len(most_common_values) > 1 else None
         form = create_form(candidate_type, code, name)
         data.append({
             'form': form,

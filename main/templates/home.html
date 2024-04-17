@@ -103,24 +103,27 @@
                                 {% if candidates and candidate.candidate_type == d.candidate_type %}
                                     <div id="results">
                                         {% if d.candidate_type %}
-                                            <h2>{{ d.candidate_type.replace('_', ' ').title() }}: {{ candidate.county_name }}</h2>
+                                            <h2>{{ d.candidate_type.replace('_', ' ').title() }}: {{ candidate.list_type }}</h2>
 
-                                            <a href="http://www.google.com/search?q={{ candidate.county_name }}" class="mb-3"
-                                                target="_blank">Get more information for: {{ candidate.county_name }}</a>
+                                            <a href="http://www.google.com/search?q={{ candidate.list_type }}" class="mb-3"
+                                                target="_blank">Get more information for: {{ candidate.list_type }}</a>
                                             <h2>Your candidates are:</h2>
                                             {% for item in candidates %}
-                                                <div class="item"><a target="_blank"
-                                                        href="http://www.google.com/search?q={{ item.other_names }} {{ item.surname }}">{{loop.index}}.
-                                                        {{ item.other_names }} </a><!--(Sex: {{ item.gender }})-->
+                                                <div class="item">
+                                                    <a target="_blank" href="http://www.google.com/search?q={{ item.full_names }} {{ item.surname }}">
+                                                        {{loop.index}}. {{ item.full_names }} {{ item.surname }}
+                                                    </a><!--(Sex: {{ item.gender }})-->
                                                         {%set item_name = item.locator.strip("{}").split(',')[0] %}
                                                         {%set item_code = item.locator.strip("{}").split(',')[1] %}
-                                                        {% if item.political_party_name %} - {{item.political_party_name}}{% endif %} - {{item_name.split('_')[0].title()}}: {{item[item_name]}} - {{item[item_code]}}</div>
+                                                        {% if item.party %} - {{item.party}}{% endif %} - {{item[item_name]}} {% if item_code %}- {{item[item_code]}}{% endif %}</div>
                                             {% endfor %}
                                             {% for candidate in presidential_candidates %}
                                                 <h2>Your Presidential Candidates are:</h2>
-                                                <div class="item"><a target="_blank"
-                                                        href="http://www.google.com/search?q={{ candidate.other_names }} {{ candidate.surname }}">{{loop.index}}.
-                                                        {{ candidate.other_names }} </a> - {{ candidate.political_party_name }}</div>
+                                                <div class="item">
+                                                    <a target="_blank"
+                                                        href="http://www.google.com/search?q={{ candidate.full_names }} {{ candidate.surname }}">
+                                                        {{loop.index}}. {{ candidate.full_names }} {{ candidate.surname }}
+                                                    </a> - {{ candidate.party }}</div>
                                                 {% endfor %}
                                         {% endif %}
                                     </div>

@@ -23,15 +23,20 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('title', sa.String(), nullable=True),
     sa.Column('title_short', sa.String(), nullable=True),
-    sa.Column('navbar_logo', sa.String(), nullable=True),
     sa.Column('favicon_logo', sa.String(), nullable=True),
-    sa.Column('primary_color', sa.String(), nullable=True),
-    sa.Column('secondary_color', sa.String(), nullable=True),
+    sa.Column('logo_colour', sa.String(), nullable=True),
+    sa.Column('footer_colour', sa.String(), nullable=True),
+    sa.Column('body_foreground_colour', sa.String(), nullable=True),
+    sa.Column('body_background_colour', sa.String(), nullable=True),
+    sa.Column('find_candidates_button', sa.String(), nullable=True),
+    sa.Column('candidate_names_colour', sa.String(), nullable=True),
     sa.Column('data_schemas', sa.String(), nullable=True),
     sa.Column('partner_name', sa.String(), nullable=True),
     sa.Column('partner_website', sa.String(), nullable=True),
     sa.Column('google_analytics_key', sa.String(), nullable=True),
     sa.Column('gtag_script', sa.String(), nullable=True),
+    sa.Column('organization_name', sa.String(), nullable=True),
+    sa.Column('organization_link', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
 
