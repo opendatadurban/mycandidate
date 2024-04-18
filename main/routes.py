@@ -12,12 +12,14 @@ def home():
     form_id = None
     form_url = "/"
     data = get_data()
+    print(data)
     area_name = data[0]['candidate_type']
     config_queryset = db.session.query(Config).first()
     config = config_queryset.json()
     print(config)
     if request.method == 'POST' and request.form['ds_id'] is not None:
         form_id = request.form['ds_id']  
+        print(form_id)
         area_name = request.form['candidate_type']
         candidates, code = get_candidates(form_id, db, area_name)
         # print("final result", candidates[0:2])

@@ -70,65 +70,74 @@
             </div>
         </div>
     </div>
-
+    {% set unique_candidate_types = [] %}
+    {% for d in data %}
+        {% if d.candidate_type not in unique_candidate_types %}
+            {% set _ = unique_candidate_types.append(d.candidate_type) %}
+        {% endif %}
+    {% endfor %}
     <div class="grey-wrapper" style="background-color: {{config.body_background_colour}};">
         <ul class="nav nav-tabs" id="candidate-type-list ">
-            {% for d in data %}
-            <li id="nav-{{loop.index}}" class=" {% if area_name == d.candidate_type %} active {% endif %}" style="width: {{100/data|length}}%;"><a data-toggle="tab" href="#{{d.candidate_type}}">{{d.candidate_type.replace('_', ' ').title()}}</a></li>
-            {% endfor %}
+            {% for candidate_type in unique_candidate_types %}
+            <li id="nav-{{loop.index}}" class="{% if area_name == candidate_type %} active {% endif %}" style="width: {{ 100/unique_candidate_types|length }}%;">
+                <a data-toggle="tab" href="#{{ candidate_type }}">{{ candidate_type.replace('_', ' ').title() }}</a>
+            </li>
+        {% endfor %}
         </ul>
     </div>
 
-   <div class="tab-content" style="background-color: {{config.body_foreground_colour}};">
+    <div class="tab-content" style="background-color: {{config.body_foreground_colour}};">
         <div class="container">
             <div class="row">
-                {% for d in data %}
-                <div id="{{d.candidate_type}}" class=" tab-pane fade {% if area_name == d.candidate_type  %} active in {% endif %}">
+                {% for candidate_type in unique_candidate_types %}
+                    {% set candis = [] %}
+                    {% for d in data %}
+                        {% if d.candidate_type == candidate_type %}
+                            {% set _ = candis.append(d) %}
+                        {% endif %}
+                    {% endfor %}
+                    <div id="{{ candidate_type }}" class="tab-pane fade {% if area_name == candidate_type %} active in {% endif %}">
                         <div class="panel panel-info" style="background-color: {{config.body_foreground_colour}};">
                             <div class="panel-heading">Find out who is contesting</div>
                             <div class="panel-body">
                                 <form action="/" method="POST">
-                                    {{ d.form.csrf_token }}
-                                    {{ d.form.hidden_tag() }}
-                                    {% set id = 'js-example-basic-single-' + loop.index|string %}
+                                    {{ candis[0].form.csrf_token }}
+                                    {{ candis[0].form.hidden_tag() }}
                                     <div class="form-group">
                                         <label class="control-label" for="address">Search:</label>
                                         <div class="input-group">
-                                            {{ d.form.ds_id(class="form-control", id=id ) }}
-                                            <input type="text" name="candidate_type" value="{{d.candidate_type}}" hidden>
+                                            {{ candis[0].form.ds_id(class="form-control", id='js-example-basic-single-' + loop.index|string) }}
+                                            <input type="text" name="candidate_type" value="{{ candidate_type }}" hidden>
                                             <span class="input-group-btn">
                                                 <button type="submit" class="btn btn-primary" id="submit-btn" style="background-color: {{config.find_candidates_button}};">Find Candidates</button>
                                             </span>
                                         </div>
                                     </div>
                                 </form>
-
-                                {% if candidates and candidate.candidate_type == d.candidate_type %}
+    
+                                {% if candidates and candidate.candidate_type == candidate_type %}
                                     <div id="results">
-                                        {% if d.candidate_type %}
-                                            <h2>{{ d.candidate_type.replace('_', ' ').title() }}: {{ candidate.list_type }}</h2>
-
-                                            <a href="http://www.google.com/search?q={{ candidate.list_type }}" class="mb-3"
-                                                target="_blank">Get more information for: {{ candidate.list_type }}</a>
-                                            <h2>Your candidates are:</h2>
-                                            {% for item in candidates %}
-                                                <div class="item">
-                                                    <a target="_blank" href="http://www.google.com/search?q={{ item.full_names }} {{ item.surname }}">
-                                                        {{loop.index}}. {{ item.full_names }} {{ item.surname }}
-                                                    </a><!--(Sex: {{ item.gender }})-->
-                                                        {%set item_name = item.locator.strip("{}").split(',')[0] %}
-                                                        {%set item_code = item.locator.strip("{}").split(',')[1] %}
-                                                        {% if item.party %} - {{item.party}}{% endif %} - {{item[item_name]}} {% if item_code %}- {{item[item_code]}}{% endif %}</div>
-                                            {% endfor %}
-                                            {% for candidate in presidential_candidates %}
-                                                <h2>Your Presidential Candidates are:</h2>
-                                                <div class="item">
-                                                    <a target="_blank"
-                                                        href="http://www.google.com/search?q={{ candidate.full_names }} {{ candidate.surname }}">
-                                                        {{loop.index}}. {{ candidate.full_names }} {{ candidate.surname }}
-                                                    </a> - {{ candidate.party }}</div>
-                                                {% endfor %}
-                                        {% endif %}
+                                        <h2>{{ candidate_type.replace('_', ' ').title() }}: {{ candidate.list_type }}</h2>
+                                        <a href="http://www.google.com/search?q={{ candidate.list_type }}" class="mb-3" target="_blank">Get more information for: {{ candidate.list_type }}</a>
+                                        <h2>Your candidates are:</h2>
+                                        {% for item in candidates %}
+                                            <div class="item">
+                                                <a target="_blank" href="http://www.google.com/search?q={{ item.full_names }} {{ item.surname }}">
+                                                    {{ loop.index }}. {{ item.full_names }} {{ item.surname }}
+                                                </a><!--(Sex: {{ item.gender }})-->
+                                                {% set item_name = item.locator.strip("{}").split(',')[0] %}
+                                                {% set item_code = item.locator.strip("{}").split(',')[1] %}
+                                                {% if item.party %} - {{item.party}}{% endif %} - {{item[item_name]}} {% if item_code %}- {{item[item_code]}}{% endif %}
+                                            </div>
+                                        {% endfor %}
+                                        {% for candidate in presidential_candidates %}
+                                            <h2>Your Presidential Candidates are:</h2>
+                                            <div class="item">
+                                                <a target="_blank" href="http://www.google.com/search?q={{ candidate.full_names }} {{ candidate.surname }}">
+                                                    {{ loop.index }}. {{ candidate.full_names }} {{ candidate.surname }}
+                                                </a> - {{ candidate.party }}
+                                            </div>
+                                        {% endfor %}
                                     </div>
                                 {% endif %}
                             </div>
