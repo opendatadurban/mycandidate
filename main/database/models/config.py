@@ -16,6 +16,7 @@ class Config(Base):
     favicon_logo = Column(String)
     logo_colour = Column(String)
     footer_colour = Column(String)
+    nav_bars_colour = Column(String)
     body_foreground_colour = Column(String)
     body_background_colour = Column(String)
     find_candidates_button = Column(String)
@@ -39,6 +40,7 @@ class Config(Base):
             'favicon_logo': self.favicon_logo,
             'logo_colour': self.logo_colour,
             'footer_colour': self.footer_colour,
+            'nav_bars_colour': self.nav_bars_colour,
             'body_foreground_colour': self.body_foreground_colour,
             'body_background_colour': self.body_background_colour,
             'find_candidates_button': self.find_candidates_button,

@@ -26,6 +26,7 @@ def upgrade() -> None:
     sa.Column('favicon_logo', sa.String(), nullable=True),
     sa.Column('logo_colour', sa.String(), nullable=True),
     sa.Column('footer_colour', sa.String(), nullable=True),
+    sa.Column('nav_bars_colour', sa.String(), nullable=True),
     sa.Column('body_foreground_colour', sa.String(), nullable=True),
     sa.Column('body_background_colour', sa.String(), nullable=True),
     sa.Column('find_candidates_button', sa.String(), nullable=True),
