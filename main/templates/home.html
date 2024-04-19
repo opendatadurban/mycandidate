@@ -25,7 +25,7 @@
     <link href="static/css/select2min.css" rel="stylesheet">#}
 <style>
     .tab-content .panel.panel-info #results a{
-        color: {{config.find_candidates_button}};
+        color: {{config.candidate_names_colour}};
     }
     .tab-content .panel.panel-info .btn.btn-primary{
         border-color:{{config.find_candidates_button}} ;
@@ -58,7 +58,7 @@
   </script>
 </head>
 
-<body>
+<body style="background-color: {{config.footer_colour}};">
     <div class="nav-heading" style="background-color: {{config.nav_bars_colour}};" >
         <div class="container">
             <a href="/" class="trigger"></a>
@@ -98,6 +98,15 @@
                     {% endfor %}
                     <div id="{{ candidate_type }}" class="tab-pane fade {% if area_name == candidate_type %} active in {% endif %}">
                         <div class="panel panel-info" style="background-color: {{config.body_foreground_colour}};">
+                            {% if d.candidate_type == 'provincial' %}
+                            <p class="description">{{config.provincial_explainer}}</p>
+                            {% endif %}
+                            {% if d.candidate_type == 'regional' %}
+                            <p class="description">{{config.regional_explainer}}</p>
+                            {% endif %}
+                            {% if d.candidate_type == 'national' %}
+                            <p class="description">{{config.national_explainer}}</p>
+                            {% endif %}
                             <div class="panel-heading">Find out who is contesting</div>
                             <div class="panel-body">
                                 <form action="/" method="POST">
@@ -162,7 +171,7 @@
                 </div>
                 <br>
                 <div class="col-lg-12 font-style" style="">
-                    A Product of Open Cities Lab <a target="_blank"
+                    A Product of <a target="_blank"
                         href="https://opencitieslab.org">Open Cities Lab</a> </br></br>
 
                     <p>We respect your privacy!</p>
