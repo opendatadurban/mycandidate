@@ -23,7 +23,7 @@ def create_form(candidate_type, code, name):
             if name is not None:
                 self.ds_id.choices = [(assurance[0], f'{assurance[1]} - {assurance[0]}') for assurance in assurances]
             else:
-                self.ds_id.choices = [(assurance[0], f'{assurance[1]} - {assurance[0]}') for assurance in assurances]
+                self.ds_id.choices = [(f'{assurance[1]} - {assurance[0]}', f'{assurance[1]} - {assurance[0]}') for assurance in assurances]
 
             self.ds_id.choices.insert(0, ("", ""))
 
@@ -36,22 +36,19 @@ def create_form(candidate_type, code, name):
 
 def get_data():
     distinct_types_query = """
-        SELECT DISTINCT candidate_type, locator, party FROM candidates
+        SELECT DISTINCT candidate_type, locator FROM candidates
     """
     distinct_types_result = db.session.execute(distinct_types_query)
 
     data = []
     for row in distinct_types_result:
-        # print(row)
         most_common_values = row[1].strip("{}").split(',')
         candidate_type = row[0]
-        party = row[2]
         code = most_common_values[0]
         name = most_common_values[1] if len(most_common_values) > 1 else None
         form = create_form(candidate_type, code, name)
         data.append({
             'form': form,
             'candidate_type': candidate_type,
-            'party': party
         })
     return data
