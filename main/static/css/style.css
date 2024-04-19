@@ -45,7 +45,7 @@ body{
     line-height: 24px;
     text-align: center;
     font-weight: 400;
-    color: #D2D2D2;
+    color: #ACACAC;
 }
 
 .grey-wrapper .nav-tabs li.active {
@@ -65,12 +65,19 @@ body{
     padding-bottom: 60px;
     min-height: calc(100vh - 294px - 75px - 78px);
 }
-
+.panel.panel-info .description{
+    font-family: 'Montserrat';
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20.8px;
+    letter-spacing: 0.5471879839897156px;
+    color: #FFFFFF;
+}
 .tab-content .panel-heading{
     font-family: 'Montserrat';
     font-weight: 400;
     font-style: italic;
-    font-size: 24px;
+    font-size: 32px;
     line-height: 32px;
     background: transparent;
     color: #FFFFFF;
