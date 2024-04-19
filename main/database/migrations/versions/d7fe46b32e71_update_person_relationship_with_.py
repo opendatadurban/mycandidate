@@ -38,6 +38,9 @@ def upgrade() -> None:
     sa.Column('gtag_script', sa.String(), nullable=True),
     sa.Column('organization_name', sa.String(), nullable=True),
     sa.Column('organization_link', sa.String(), nullable=True),
+    sa.Column('regional_explainer', sa.String(), nullable=True),
+    sa.Column('provincial_explainer', sa.String(), nullable=True),
+    sa.Column('national_explainer', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
 

@@ -28,6 +28,9 @@ class Config(Base):
     gtag_script = Column(String)
     organization_name = Column(String)
     organization_link = Column(String)
+    regional_explainer = Column(String)
+    provincial_explainer = Column(String)
+    national_explainer = Column(String)
 
     def __repr__(self):
         return f'<id {self.id}>'
@@ -51,4 +54,7 @@ class Config(Base):
             'gtag_script': self.gtag_script,
             'organization_name': self.organization_name,
             'organization_link': self.organization_link,
+            'regional_explainer': self.regional_explainer,
+            'provincial_explainer': self.provincial_explainer,
+            'national_explainer': self.national_explainer
         }
