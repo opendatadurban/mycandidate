@@ -23,8 +23,10 @@ def create_form(candidate_type, code, name):
             if name is not None:
                 self.ds_id.choices = [(assurance[0], f'{assurance[1]} - {assurance[0]}') for assurance in assurances]
             else:
-                self.ds_id.choices = [(f'{assurance[1]} - {assurance[0]}', f'{assurance[1]} - {assurance[0]}') for assurance in assurances]
+                self.ds_id.choices = [(f'{assurance[0]} - {assurance[1]}', f'{assurance[0]} - {assurance[1]}') for assurance in assurances]
 
+            # Sort tuple alphabetically
+            self.ds_id.choices = sorted(self.ds_id.choices, key=lambda x: x[0])
             self.ds_id.choices.insert(0, ("", ""))
 
         def validate(self):

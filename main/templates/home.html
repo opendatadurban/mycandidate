@@ -88,7 +88,7 @@
                             {% if d.candidate_type == 'provincial' %}
                             <p class="description">{{config.provincial_explainer}}</p>
                             {% endif %}
-                            {% if d.candidate_type == 'regional' %}
+                            {% if d.candidate_type == 'national_regional' %}
                             <p class="description">{{config.regional_explainer}}</p>
                             {% endif %}
                             {% if d.candidate_type == 'national' %}
@@ -116,7 +116,6 @@
                                     <div id="results">
                                         {% if d.candidate_type %}
                                             <h2>{{ d.candidate_type.replace('_', ' ').title() }}: {{ candidate.list_type }}</h2>
-
                                             <a href="http://www.google.com/search?q={{ candidate.list_type }}" class="mb-3"
                                                 target="_blank">Get more information for: {{ candidate.list_type }}</a>
                                             <h2>Your candidates are:</h2>
