@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-
+    {% set unique_candidate_types = [] %}
     <div class="grey-wrapper" style="background-color: {{config.body_background_colour}};">
         <ul class="nav nav-tabs" id="candidate-type-list ">
             {% for d in data %}
@@ -79,7 +79,7 @@
         </ul>
     </div>
 
-   <div class="tab-content" style="background-color: {{config.body_foreground_colour}};">
+    <div class="tab-content" style="background-color: {{config.body_foreground_colour}};">
         <div class="container">
             <div class="row">
                 {% for d in data %}
@@ -111,7 +111,7 @@
                                         </div>
                                     </div>
                                 </form>
-
+    
                                 {% if candidates and candidate.candidate_type == d.candidate_type %}
                                     <div id="results">
                                         {% if d.candidate_type %}

@@ -12,7 +12,7 @@ def requires_auth(func):
     return decorated
 
 
-def get_candidates(form_id, db, area_name):
+def get_candidates(form_id, db, candidate_type):
     distinct_types_query = """
         SELECT DISTINCT candidate_type, locator FROM candidates
     """
@@ -20,15 +20,16 @@ def get_candidates(form_id, db, area_name):
 
     rows_as_dicts = []
     for row in distinct_types_result:
-        if row[0] == area_name:
+        if row[0] == candidate_type:
             most_common_values = row[1].strip("{}").split(',')
             code = most_common_values[0]
-            retrieve_query = f"""SELECT * FROM candidates 
-                    WHERE {code} = :form_id 
-                    AND candidate_type = :area_name
-                """ 
-            params = {'form_id': form_id, "area_name": area_name}
-            result = db.session.execute(retrieve_query, params) 
+            retrieve_query = f"""SELECT * FROM candidates
+                    WHERE party = :form_id
+                    AND candidate_type = :candidate_type
+                    AND list_type = :location
+                """
+            params = {'form_id': form_id[0], "candidate_type": candidate_type, "location": form_id[1]}
+            result = db.session.execute(retrieve_query, params)
             column_names = result.keys()
             for row in result:
                 row_dict = dict(zip(column_names, row))

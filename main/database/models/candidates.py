@@ -17,13 +17,13 @@ def create_form(candidate_type, code, name):
             if name is not None:
                 query = text(f"SELECT DISTINCT {code}, {name} FROM candidates WHERE candidate_type = :candidate_type")
             else:
-                query = text(f"SELECT DISTINCT {code} FROM candidates WHERE candidate_type = :candidate_type")
+                query = text(f"SELECT DISTINCT {code}, party FROM candidates WHERE candidate_type = :candidate_type")
             assurances = db.session.execute(query, {'candidate_type': candidate_type}).fetchall()
 
             if name is not None:
                 self.ds_id.choices = [(assurance[0], f'{assurance[1]} - {assurance[0]}') for assurance in assurances]
             else:
-                self.ds_id.choices = [(assurance[0], str(assurance[0])) for assurance in assurances]
+                self.ds_id.choices = [(f'{assurance[1]} - {assurance[0]}', f'{assurance[1]} - {assurance[0]}') for assurance in assurances]
 
             self.ds_id.choices.insert(0, ("", ""))
 
@@ -49,6 +49,6 @@ def get_data():
         form = create_form(candidate_type, code, name)
         data.append({
             'form': form,
-            'candidate_type': candidate_type
+            'candidate_type': candidate_type,
         })
     return data
