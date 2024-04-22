@@ -126,7 +126,8 @@
                                                     </a><!--(Sex: {{ item.gender }})-->
                                                         {%set item_name = item.locator.strip("{}").split(',')[0] %}
                                                         {%set item_code = item.locator.strip("{}").split(',')[1] %}
-                                                        {% if item.party %} - {{item.party}}{% endif %} - {{item[item_name]}} {% if item_code %}- {{item[item_code]}}{% endif %}</div>
+                                                        {% if item.party %} - {{item.party}}{% endif %} - {{item[item_name]}} {% if item_code %}- {{item[item_code]}}{% endif %}
+                                                        (Age: {{ item.age }})</div>
                                             {% endfor %}
                                             {% for candidate in presidential_candidates %}
                                                 <h2>Your Presidential Candidates are:</h2>
