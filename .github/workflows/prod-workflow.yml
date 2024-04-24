@@ -6,10 +6,7 @@ name: Build for MyCandidate App
 on:
   push:
     branches:
-    - main
-  pull_request:
-    branches: 
-      - main
+    - prod
 
 permissions:
   contents: read
@@ -33,13 +30,13 @@ jobs:
     - name: Get Environment Variables and Create Configuration File
       uses: alekangelov/secret-envfile@v1
       with:
-        content: ${{ secrets.ENV }}
-        filename: main/config/development.cfg
+        content: ${{ secrets.ENV_PROD }}
+        filename: main/config/production.cfg
 
     - name: Create ini File for Alembic
       uses: alekangelov/secret-envfile@v1
       with:
-        content: ${{ secrets.INI }}
+        content: ${{ secrets.INI_PROD }}
         filename: alembic.ini
 
     - name: Lint with flake8
@@ -53,8 +50,12 @@ jobs:
       run: |
         alembic upgrade head
       env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
         
     - name: Test with pytest
       run: |
         pytest
+
+    - name: Seed data to DB
+      run: |
+        python rebuild_db.py
