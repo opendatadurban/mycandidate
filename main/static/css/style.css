@@ -269,6 +269,9 @@ body{
     .panel-body, .panel-heading{
         padding: 20px;
     }
+    .panel .description{
+        padding: 20px;
+    }
 }
 
 @media (min-width: 768px) {
