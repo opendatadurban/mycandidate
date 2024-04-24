@@ -28,7 +28,7 @@ def home():
             AND list_type = :location
             LIMIT 1
         """
-        params = {'form_id': candidate_types[0], "candidate_type": candidate_type, "location": candidate_types[1]}
+        params = {'form_id': candidate_types[1], "candidate_type": candidate_type, "location": candidate_types[0]}
         candidate_result = db.session.execute(candidate_query, params)
         candidate = candidate_result.fetchone()
         # print(candidate)

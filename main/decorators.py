@@ -28,7 +28,7 @@ def get_candidates(form_id, db, candidate_type):
                     AND candidate_type = :candidate_type
                     AND list_type = :location
                 """
-            params = {'form_id': form_id[0], "candidate_type": candidate_type, "location": form_id[1]}
+            params = {'form_id': form_id[1], "candidate_type": candidate_type, "location": form_id[0]}
             result = db.session.execute(retrieve_query, params)
             column_names = result.keys()
             for row in result:

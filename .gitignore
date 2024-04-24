@@ -111,9 +111,7 @@ venv.bak/
 .idea
 .idea/dataSources.xml
 
-development.cfg
 main/static/data
-main/config/development.cfg
-
-main/data
 south-africa.json
+
+main/config/development.cfg
