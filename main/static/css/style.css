@@ -63,7 +63,7 @@ body{
     background-color: #33404E;
     padding-top: 30px;
     padding-bottom: 60px;
-    min-height: calc(100vh - 294px - 75px - 78px);
+    min-height: calc(100vh - 325px - 75px - 78px);
 }
 .panel.panel-info .description{
     font-family: 'Montserrat';
@@ -267,6 +267,9 @@ body{
         padding-left: 20px;
     }
     .panel-body, .panel-heading{
+        padding: 20px;
+    }
+    .panel .description{
         padding: 20px;
     }
 }
