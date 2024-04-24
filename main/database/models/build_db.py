@@ -36,6 +36,7 @@ def seed_site_settings(db, excel_file_path):
                     favicon_logo=row["favicon_link"],
                     logo_colour=row["logo_colour"],
                     footer_colour=row["footer_colour"],
+                    nav_bars_colour=row["nav_bars_colour"],
                     body_foreground_colour=row["body_foreground_colour"],
                     body_background_colour=row["body_background_colour"],
                     find_candidates_button=row["find_candidates_button"],
@@ -46,7 +47,11 @@ def seed_site_settings(db, excel_file_path):
                     google_analytics_key=row["google_analytics_key"] if row["google_analytics_key"] else None,	
                     gtag_script=row["gTag_script"] if row["gTag_script"] else None,
                     organization_name=row["organization_name"] if row["organization_name"] else None,
-                    organization_link=row["organization_link"] if row["organization_link"] else None
+                    organization_link=row["organization_link"] if row["organization_link"] else None,
+                    regional_explainer=row["regional_explainer"] if row["regional_explainer"] else None,
+                    provincial_explainer=row["provincial_explainer"] if row["provincial_explainer"] else None,
+                    national_explainer=row["national_explainer"] if row["national_explainer"] else None
+
                 )
             
                 # Dynamically handle additional columns
