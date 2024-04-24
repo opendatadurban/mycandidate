@@ -1,188 +1,33 @@
 from ...app import db
 import uuid
 
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, text
 from sqlalchemy.orm import relationship
 from main.database.base_class import Base
 from wtforms import SelectField, validators
 from ...forms import Form
-
-
-class PoliticalParty(Base):
-    """
-    Political Party Table
-    """
-    __tablename__ = 'political_party'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(255), unique=True)
-    abbreviation = Column(String(20))
-
     
-    def __repr__(self):
-        return f'<id {self.id}>'
-    
-    def json(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'abbv': self.abbreviation,
-        }
-
-class Person(Base):
-    """
-    Person Table
-    """
-    __tablename__ = 'person'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(255))
-    surname = Column(String(255))
-    gender = Column(String(10), nullable=True)
-    race = Column(String(50), nullable=True)
-    party_id = Column(Integer, ForeignKey('political_party.id'))
-    political_party = relationship('PoliticalParty', backref='persons')
-    # metadata = Column(String(355), nullable=True)
-    
-
-    def __repr__(self):
-        return f'<id {self.id}>'
-    
-    def json(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'surname': self.surname,
-            'gender': self.gender if self.gender else None,
-            'race': self.race if self.race else None,
-            'party': self.political_party.json() if self.political_party else None
-        }
-    
-class Constituency(Base):
-    """
-    Constituency Table
-    """
-    __tablename__ = 'constituency'
-
-    id = Column(Integer, primary_key=True)
-    code = Column(String(20), nullable=True)
-    name = Column(String(255), unique=True, nullable=True)
-
-    def __repr__(self):
-        return f'<id {self.id}>'
-    
-    def json(self):
-        return {
-            'id': self.id,
-            'name': self.name if self.name else None,
-            'code': self.code if self.code else None,
-        }
-
-class Province(Base):
-    """
-    Person Table
-    """
-    __tablename__ = 'province'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(255), unique=True)
-    code = Column(String(10))
-
-    def __repr__(self):
-        return f'<id {self.id}>'
-    
-    def json(self):
-        return {
-            'id': self.id,
-            'name': self.name if self.name else None,
-            'code': self.code if self.code else None,
-        }
-
-class Ward(Base):
-    """
-    Ward Table
-    """
-    __tablename__ = 'ward'
-
-    id = Column(Integer, primary_key=True)
-    province_id = Column(Integer, ForeignKey('province.id'))
-    name = Column(String(255))
-    code = Column(String(20), unique=True)
-    province = relationship('Province', backref='wards')
-
-    def __repr__(self):
-        return f'<id {self.id}>'
-    
-    def json(self):
-        return {
-            'id': self.id,
-            'name': self.name if self.name else None,
-            'code': self.code if self.code else None,
-            'province': self.province.json(),
-        }
-
-class Candidate(Base):
-    """
-    Candidate link table 
-    """
-    __tablename__ = 'candidates'
-
-    id = Column(Integer, primary_key=True)
-    candidate_type = Column(String(50))
-    person_id = Column(Integer, ForeignKey('person.id'))
-    party_id = Column(Integer, ForeignKey('political_party.id'))
-    constituency_id = Column(Integer, ForeignKey('constituency.id'), nullable=True)
-    ward_id = Column(Integer, ForeignKey('ward.id'), nullable=True)
-    
-
-    # Associations
-    person = relationship('Person', backref='candidates')
-    party = relationship('PoliticalParty', backref='candidates')
-    constituency = relationship('Constituency', backref='candidates')
-    ward = relationship('Ward', backref='candidates')
-
-    def __repr__(self):
-        return f'<id {self.id}>'
-    
-    def to_dict(self):
-        return {
-            'candidate_type': self.candidate_type if self.candidate_type else None,
-            'person': self.person.json() if self.person else None,
-            # 'political_party': self.party.json() if self.party else None,
-            'ward': self.ward.json() if self.ward and self.ward.id == self.ward_id else None,
-            'constituency': self.constituency.json() if self.constituency else None,
-        }
-    
-class CandidateForm(Form):
-    ds_id = SelectField('Candidate Type', [validators.DataRequired()])
-
-    def __init__(self, *args, **kwargs):
-        super(CandidateForm, self).__init__(*args, **kwargs)
-        assurances = [
-            (assurance.candidate_type, f"{assurance.candidate_type}")
-            for assurance in db.session.query(Candidate).distinct(Candidate.candidate_type)
-        ]
-        assurances.insert(0, ("",""))
-        self.ds_id.choices = assurances
-
-    def validate(self):
-        return super(CandidateForm, self).validate()
-
-    def populate_obj(self, obj):
-        super(CandidateForm, self).populate_obj(obj)
-
-def create_form(candidate_type):
+def create_form(candidate_type, code, name):
     class CandidatesForm(Form):
         ds_id = SelectField('Ward', [validators.DataRequired()])
 
         def __init__(self, *args, **kwargs):
             super(CandidatesForm, self).__init__(*args, **kwargs)
-            assurances = [
-                (assurance.ward.id, f"{assurance.ward.name} - {assurance.ward.code}")
-                for assurance in db.session.query(Candidate).filter(Candidate.candidate_type == candidate_type).all()
-            ]
-            assurances.insert(0, ("",""))
-            self.ds_id.choices = assurances
+            query = None
+            if name is not None:
+                query = text(f"SELECT DISTINCT {code}, {name} FROM candidates WHERE candidate_type = :candidate_type")
+            else:
+                query = text(f"SELECT DISTINCT {code}, party FROM candidates WHERE candidate_type = :candidate_type")
+            assurances = db.session.execute(query, {'candidate_type': candidate_type}).fetchall()
+
+            if name is not None:
+                self.ds_id.choices = [(assurance[0], f'{assurance[1]} - {assurance[0]}') for assurance in assurances]
+            else:
+                self.ds_id.choices = [(f'{assurance[0]} - {assurance[1]}', f'{assurance[0]} - {assurance[1]}') for assurance in assurances]
+
+            # Sort tuple alphabetically
+            self.ds_id.choices = sorted(self.ds_id.choices, key=lambda x: x[0])
+            self.ds_id.choices.insert(0, ("", ""))
 
         def validate(self):
             return super(CandidatesForm, self).validate()
@@ -192,50 +37,20 @@ def create_form(candidate_type):
     return CandidatesForm()
 
 def get_data():
-    distinct_types = db.session.query(Candidate).with_entities(Candidate.candidate_type).distinct().all()
+    distinct_types_query = """
+        SELECT DISTINCT candidate_type, locator FROM candidates
+    """
+    distinct_types_result = db.session.execute(distinct_types_query)
+
     data = []
-    for distinct_type in distinct_types:
-        candidate_type = distinct_type[0]
-        form = create_form(candidate_type)
+    for row in distinct_types_result:
+        most_common_values = row[1].strip("{}").split(',')
+        candidate_type = row[0]
+        code = most_common_values[0]
+        name = most_common_values[1] if len(most_common_values) > 1 else None
+        form = create_form(candidate_type, code, name)
         data.append({
-            'form':form,
-            'candidate_type':candidate_type
+            'form': form,
+            'candidate_type': candidate_type,
         })
     return data
-    
-class WardForm(Form):
-    ds_id = SelectField('Local Authority', [validators.DataRequired()])
-
-    def __init__(self, *args, **kwargs):
-        super(WardForm, self).__init__(*args, **kwargs)
-        assurances = [
-            (assurance.ward.id, f"{assurance.ward.name} - {assurance.ward.code}")
-            for assurance in db.session.query(Candidate).distinct(Candidate.ward_id)
-        ]
-        assurances.insert(0, ("",""))
-        self.ds_id.choices = assurances
-
-    def validate(self):
-        return super(WardForm, self).validate()
-
-    def populate_obj(self, obj):
-        super(WardForm, self).populate_obj(obj)
-
-
-class ConstituencyForm(Form):
-    ds_id = SelectField('Constituency Name', [validators.DataRequired()])
-
-    def __init__(self, *args, **kwargs):
-        super(ConstituencyForm, self).__init__(*args, **kwargs)
-        assurances = [
-            (assurance.constituency.id, assurance.constituency.name)
-            for assurance in Candidate.query.distinct(Candidate.constituency_id)
-        ]
-        assurances.insert(0, ("",""))
-        self.ds_id.choices = assurances
-
-    def validate(self):
-        return super(CandidateForm, self).validate()
-
-    def populate_obj(self, obj):
-        super(CandidateForm, self).populate_obj(obj)

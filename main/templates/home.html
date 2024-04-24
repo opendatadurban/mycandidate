@@ -8,7 +8,7 @@
 
     <meta name="description" content="Find your Candidate for Elections">
     <meta name="author" content="Open Cities Lab">
-    <link rel="icon" href="/static/favicon-home.png">
+    <link rel="icon" href="/static/favicon.png">
 
 
 
@@ -25,89 +25,117 @@
     <link href="static/css/select2min.css" rel="stylesheet">#}
 <style>
     .tab-content .panel.panel-info #results a{
-        color: {{config.primary_color}};
+        color: {{config.candidate_names_colour}};
     }
     .tab-content .panel.panel-info .btn.btn-primary{
-        border-color:{{config.primary_color}} ;
-        background-color: {{config.primary_color}};
+        border-color:{{config.find_candidates_button}} ;
+        background-color: {{config.find_candidates_button}};
     }
 
     .footer-below a, .nav-heading .purple-tittle{
-        color: {{config.secondary_color}};
+        color: {{config.logo_colour}};
     }
     .footer-below .btn.btn-mini.btn-primary{
         background: transparent;
-        border-color:{{config.secondary_color}} ;
-        color: {{config.secondary_color}};
+        padding: 12px;
+        border-color:{{config.logo_colour}} ;
+        color: {{config.logo_colour}};
+        
+    }
+    .grey-wrapper .nav-tabs li.active a{
+        background-color: {{config.body_foreground_colour}};
     }
 </style>
 
-
+<script>
+    window.Userback = window.Userback || {};
+    Userback.access_token = '7688|88791|ha8YH6mRJBS2dBoMh4GPd5I1qncr7GqYxyNMjBOSgrHO5Z1b44';
+    (function(d) {
+      var s = d.createElement('script');s.async = true;
+      s.src = 'https://static.userback.io/widget/v1.js';
+      (d.head || d.body).appendChild(s);
+    })(document);
+  </script>
 </head>
 
-<body>
-    <div class="nav-heading">
+<body style="background-color: {{config.footer_colour}};">
+    <div class="nav-heading" style="background-color: {{config.nav_bars_colour}};" >
         <div class="container">
+            <a href="/" class="trigger"></a>
             <div class="row">
                 <div class="col-12">
                     <h5 class="light-title">MyCandidate</h5>
-                    <h4 class="purple-tittle">{{config.title}}</h4>
+                    <h4 class="purple-tittle" style="color:{{config.logo_colour}} ;">{{config.title}}</h4>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="grey-wrapper">
-        <ul class="nav nav-tabs">
+    {% set unique_candidate_types = [] %}
+    <div class="grey-wrapper" style="background-color: {{config.body_background_colour}};">
+        <ul class="nav nav-tabs" id="candidate-type-list ">
             {% for d in data %}
-            <li class=" {% if area_name == d.candidate_type %} active {% endif %}"><a data-toggle="tab" href="#{{d.candidate_type}}">{{d.candidate_type}}</a></li>
+            <li id="nav-{{loop.index}}" class=" {% if area_name == d.candidate_type %} active {% endif %}" style="width: {{100/data|length}}%;"><a data-toggle="tab" href="#{{d.candidate_type}}">{{d.candidate_type.replace('_', ' ').title()}}</a></li>
             {% endfor %}
         </ul>
     </div>
 
-   <div class="tab-content">
+    <div class="tab-content" style="background-color: {{config.body_foreground_colour}};">
         <div class="container">
             <div class="row">
                 {% for d in data %}
-                    <div id="{{d.candidate_type}}" class=" tab-pane fade {% if area_name == d.candidate_type  %} active in {% endif %}">
-                        <div class="panel panel-info">
-                            <div class="panel-heading">Find out who is contesting in your {{d.candidate_type}}</div>
+                <div id="{{d.candidate_type}}" class=" tab-pane fade {% if area_name == d.candidate_type  %} active in {% endif %}">
+                        <div class="panel panel-info" style="background-color: {{config.body_foreground_colour}};">
+                            {% if d.candidate_type == 'provincial' %}
+                            <p class="description">{{config.provincial_explainer}}</p>
+                            {% endif %}
+                            {% if d.candidate_type == 'national_regional' %}
+                            <p class="description">{{config.regional_explainer}}</p>
+                            {% endif %}
+                            {% if d.candidate_type == 'national' %}
+                            <p class="description">{{config.national_explainer}}</p>
+                            {% endif %}
+                            <div class="panel-heading">Find out who is contesting</div>
                             <div class="panel-body">
                                 <form action="/" method="POST">
                                     {{ d.form.csrf_token }}
                                     {{ d.form.hidden_tag() }}
                                     {% set id = 'js-example-basic-single-' + loop.index|string %}
                                     <div class="form-group">
-                                        <label class="control-label" for="address">Search your {{d.candidate_type}}:</label>
+                                        <label class="control-label" for="address">Search:</label>
                                         <div class="input-group">
                                             {{ d.form.ds_id(class="form-control", id=id ) }}
+                                            <input type="text" name="candidate_type" value="{{d.candidate_type}}" hidden>
                                             <span class="input-group-btn">
-                                                <button type="submit" class="btn btn-primary">Find Candidates</button>
+                                                <button type="submit" class="btn btn-primary" id="submit-btn" style="background-color: {{config.find_candidates_button}};">Find Candidates</button>
                                             </span>
                                         </div>
                                     </div>
                                 </form>
-
+    
                                 {% if candidates and candidate.candidate_type == d.candidate_type %}
                                     <div id="results">
                                         {% if d.candidate_type %}
-                                            <h2>{{ d.candidate_type }}: {{ candidate.ward.name }}</h2>
-
-                                            <a href="http://www.google.com/search?q={{ candidate.ward.name }}" class="mb-3"
-                                                target="_blank">Get more information for: {{ candidate.ward.name }}</a>
+                                            <h2>{{ d.candidate_type.replace('_', ' ').title() }}: {{ candidate.list_type }}</h2>
+                                            <a href="http://www.google.com/search?q={{ candidate.list_type }}" class="mb-3"
+                                                target="_blank">Get more information for: {{ candidate.list_type }}</a>
                                             <h2>Your candidates are:</h2>
                                             {% for item in candidates %}
-                                                <div class="item"><a target="_blank"
-                                                        href="http://www.google.co.com/search?q={{ item.person.name }} {{ item.person.surname }}">{{loop.index}}.
-                                                        {{ item.person.name }} {{ item.person.surname }} </a>(Sex: {{ item.person.gender }})
-                                                        {% if item.person.party %} - {{item.person.party.name}}{% endif %} {% if item.ward.code %} -Ward: {{
-                                                            item.ward.code }} {% endif %}</div>
+                                                <div class="item">
+                                                    <a target="_blank" href="http://www.google.com/search?q={{ item.full_names }} {{ item.surname }}">
+                                                        {{loop.index}}. {{ item.full_names }} {{ item.surname }}
+                                                    </a><!--(Sex: {{ item.gender }})-->
+                                                        {%set item_name = item.locator.strip("{}").split(',')[0] %}
+                                                        {%set item_code = item.locator.strip("{}").split(',')[1] %}
+                                                        {% if item.party %} - {{item.party}}{% endif %} - {{item[item_name]}} {% if item_code %}- {{item[item_code]}}{% endif %}
+                                                        (Age: {{ item.age }})</div>
                                             {% endfor %}
                                             {% for candidate in presidential_candidates %}
                                                 <h2>Your Presidential Candidates are:</h2>
-                                                <div class="item"><a target="_blank"
-                                                        href="http://www.google.co.com/search?q={{ candidate.person.name }} {{ candidate.person.surname }}">{{loop.index}}.
-                                                        {{ candidate.person.name }} </a> - {{ candidate.person.party }}</div>
+                                                <div class="item">
+                                                    <a target="_blank"
+                                                        href="http://www.google.com/search?q={{ candidate.full_names }} {{ candidate.surname }}">
+                                                        {{loop.index}}. {{ candidate.full_names }} {{ candidate.surname }}
+                                                    </a> - {{ candidate.party }}</div>
                                                 {% endfor %}
                                         {% endif %}
                                     </div>
@@ -124,7 +152,7 @@
     {% block content %}
 
     {% endblock content %}
-    <div class="footer-below text-center">
+    <div class="footer-below text-center" style="background-color: {{config.footer_colour}};" >
         <div class="container">
             <div class="row">
                 <div class="row text-center mt-2">
@@ -134,7 +162,7 @@
                 </div>
                 <br>
                 <div class="col-lg-12 font-style" style="">
-                    A collaboration between:</br> <a target="_blank" href="">{{config.organisation}}</a> and <a target="_blank"
+                    A Product of <a target="_blank"
                         href="https://opencitieslab.org">Open Cities Lab</a> </br></br>
 
                     <p>We respect your privacy!</p>
@@ -144,6 +172,18 @@
 
                         We are still building and improving the platform
                         and your feedback will be much appreciated.
+                    </span>
+
+                </div>
+                <br>
+                <div class="col-lg-12 font-style" style="margin-top: 30px;">
+
+                    <p style="margin-bottom: 5px;">Disclaimer</p>
+
+                    <span>
+                        The candidate information on this platform <a target="_blank"
+                        href="https://www.elections.org.za/pw/Parties-And-Candidates/Candidates-List">comes from the IEC website</a> and is for general information only. We try to keep it accurate, 
+                        but it may have errors or missing details due to issues with the original data. We are not responsible for any mistakes or losses from using this data, you use it at your own risk.
                     </span>
 
                 </div>
@@ -162,7 +202,7 @@
                 <div class="modal-body">
                     <div id="results">
                         <p><code id="clipboardExample1">
-                        &lt;iframe src="{{ domain }}{{ form_url }}" style="border: none;width: 100%; height:
+                        &lt;iframe src="{{ domain }}" style="border: none;width: 100%; height:
                         400px"&gt;&lt;/iframe&gt;
                     </code></p>
                     </div>
