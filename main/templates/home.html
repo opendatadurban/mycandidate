@@ -25,9 +25,12 @@
     <link href="static/css/select2min.css" rel="stylesheet">#}
 <style>
     .navbar-default .navbar-toggle {
-        border-color: {{config.footer_colour}};
-        background-color: {{config.footer_colour}} ;
+        border-color: {{config.nav_bars_colour}};
+        background-color: {{config.nav_bars_colour}} ;
         margin-top: 25px;
+    }
+    .navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover{
+        background-color: {{config.footer_colour}} ;
     }
     .tab-content .panel.panel-info #results a{
         color: {{config.candidate_names_colour}};

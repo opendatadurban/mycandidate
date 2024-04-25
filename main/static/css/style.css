@@ -313,4 +313,7 @@ body{
     .panel-body, .panel-heading{
         padding-left: 0;
     }
+    .navbar-default .navbar-collapse, .navbar-default .navbar-form{
+        padding-right: 0;
+    }
 }
