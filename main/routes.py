@@ -1,4 +1,5 @@
 from flask import request, render_template, redirect, url_for, session, flash
+import pandas as pd
 from .database.models import *
 from .app import app
 from sqlalchemy import asc
@@ -17,18 +18,20 @@ def home():
     config = config_queryset.json()
     if request.method == 'POST' and request.form['ds_id'] is not None:
         form_id = request.form['ds_id']
-        candidate_types = form_id.split(" - ")
         candidate_type = request.form['candidate_type']
-        candidates, code = get_candidates(candidate_types, db, candidate_type)
+        candidates, code = get_candidates(form_id, db, candidate_type)
+        # Sort alphabetically
+        df = pd.DataFrame(candidates)
+        sorted_df = df.sort_values(by='party')
+        candidates = sorted_df.to_dict(orient='records')
         # print("final result", candidates[0:2])
         candidate_query = f"""
             SELECT * FROM candidates
-            WHERE party = :form_id
+            WHERE {code} = :form_id
             AND candidate_type = :candidate_type
-            AND list_type = :location
             LIMIT 1
         """
-        params = {'form_id': candidate_types[1], "candidate_type": candidate_type, "location": candidate_types[0]}
+        params = {'form_id': form_id, "candidate_type": candidate_type}
         candidate_result = db.session.execute(candidate_query, params)
         candidate = candidate_result.fetchone()
         # print(candidate)
