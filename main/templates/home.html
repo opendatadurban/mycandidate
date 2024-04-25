@@ -24,6 +24,14 @@
     {#
     <link href="static/css/select2min.css" rel="stylesheet">#}
 <style>
+    .navbar-default .navbar-toggle {
+        border-color: {{config.nav_bars_colour}};
+        background-color: {{config.nav_bars_colour}} ;
+        margin-top: 25px;
+    }
+    .navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover{
+        background-color: {{config.footer_colour}} ;
+    }
     .tab-content .panel.panel-info #results a{
         color: {{config.candidate_names_colour}};
     }
@@ -53,11 +61,7 @@
         }
     }
 
-    .navbar-default .navbar-toggle {
-        border-color: {{config.footer_colour}} !important;
-        background-color: {{config.footer_colour}} !important;
-        margin-top: 25px;
-    }
+
 </style>
 
 <script>
@@ -91,7 +95,7 @@
             </a>
           <!-- Brand and toggle get grouped for better mobile display -->
           <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
