@@ -3,7 +3,15 @@ body{
 }
 .nav-heading{
     background-color: #2F3542;
+    min-height: 90px;
     /* padding: 15px auto; */
+}
+.nav-heading .navbar-brand{
+    height: unset;
+    padding-left: 0;
+}
+.nav-heading .navbar-brand span{
+    padding-left: 0;
 }
 .nav-heading .light-title{
     font-family: 'Montserrat', sans-serif;
@@ -34,8 +42,8 @@ body{
 .grey-wrapper .nav-tabs li{
     width: 50%;
     margin-bottom: -2px;
-    white-space: nowrap;
-    overflow: hidden;
+    /* white-space: nowrap;
+    overflow: hidden; */
     text-overflow: ellipsis;
 }
 
@@ -255,7 +263,14 @@ body{
     bottom: 0;
     left: 0;
 }
-
+.navbar-default .navbar-nav>li>a{
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 17px;
+}
+.navbar-default .navbar-nav>li>a:hover{
+    color: #fff;
+}
 @media (max-width: 768px) {
     .grey-wrapper .nav-tabs li.active a{
         min-height: 70px;
@@ -272,9 +287,29 @@ body{
     .panel .description{
         padding: 20px;
     }
+    .nav-heading .navbar-brand{
+        padding-left: 6px;
+    }
+    .navbar-collapse{
+        position: absolute;
+        width: 101%;
+        z-index: 1;
+        margin: 0;
+        border: none;
+        left: 13px;
+        right: 0;
+        min-height: 101px;
+    }
+    .navbar-default .navbar-toggle .icon-bar{
+        background-color: #FFF !important;
+    }
 }
 
 @media (min-width: 768px) {
+
+    .nav-heading .navbar-right{
+        margin-top: 18px;
+    }
     .panel-body, .panel-heading{
         padding-left: 0;
     }
