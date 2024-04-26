@@ -23,48 +23,44 @@
         rel="stylesheet">
     {#
     <link href="static/css/select2min.css" rel="stylesheet">#}
-<style>
-    .navbar-default .navbar-toggle {
-        border-color: {{config.nav_bars_colour}};
-        background-color: {{config.nav_bars_colour}} ;
-        margin-top: 25px;
-    }
-    .navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover{
-        background-color: {{config.footer_colour}} ;
-    }
-    .tab-content .panel.panel-info #results a{
-        color: {{config.candidate_names_colour}};
-    }
-    .tab-content .panel.panel-info .btn.btn-primary{
-        border-color:{{config.find_candidates_button}} ;
-        background-color: {{config.find_candidates_button}};
-    }
+    <style>
+        .tab-content .panel.panel-info #results a{
+            color: {{config.candidate_names_colour}};
+        }
+        .tab-content .panel.panel-info .btn.btn-primary{
+            border-color:{{config.find_candidates_button}} ;
+            background-color: {{config.find_candidates_button}};
+        }
 
-    .footer-below a, .nav-heading .purple-tittle{
-        color: {{config.logo_colour}};
-    }
-    .footer-below .btn.btn-mini.btn-primary{
-        background: transparent;
-        padding: 12px;
-        border-color:{{config.logo_colour}} ;
-        color: {{config.logo_colour}};
-        
-    }
-    .grey-wrapper .nav-tabs li.active a{
-        background-color: {{config.body_foreground_colour}};
-    }
-    @media (max-width: 768px) {
-        .navbar-collapse{
-            border-color:{{config.footer_colour}} !important;
-            background-color: {{config.footer_colour}};
+        .footer-below a, .nav-heading .purple-tittle{
+            color: {{config.logo_colour}};
+        }
+        .footer-below .btn.btn-mini.btn-primary{
+            background: transparent;
+            padding: 12px;
+            border-color:{{config.logo_colour}} ;
+            color: {{config.logo_colour}};
             
         }
-    }
+        .grey-wrapper .nav-tabs li.active a{
+            background-color: {{config.body_foreground_colour}};
+        }
+        @media (max-width: 768px) {
+            .navbar-collapse{
+                border-color:{{config.footer_colour}} !important;
+                background-color: {{config.footer_colour}};
+                
+            }
+        }
 
+        .navbar-default .navbar-toggle {
+            border-color: {{config.footer_colour}} !important;
+            background-color: {{config.footer_colour}} !important;
+            margin-top: 25px;
+        }
+    </style>
 
-</style>
-
-<script>
+    <script>
     window.Userback = window.Userback || {};
     Userback.access_token = '7688|88791|ha8YH6mRJBS2dBoMh4GPd5I1qncr7GqYxyNMjBOSgrHO5Z1b44';
     (function(d) {
@@ -73,9 +69,21 @@
       (d.head || d.body).appendChild(s);
     })(document);
   </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MZXRHQWB');</script>
+    <!-- End Google Tag Manager -->
 </head>
 
 <body style="background-color: {{config.footer_colour}};">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MZXRHQWB"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <!-- <div class="nav-heading" style="background-color: {{config.nav_bars_colour}};" >
         <div class="container">
             <a href="/" class="trigger"></a>
@@ -95,7 +103,7 @@
             </a>
           <!-- Brand and toggle get grouped for better mobile display -->
           <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
@@ -137,7 +145,6 @@
                             {% endif %}
                             <div class="panel-heading">Find out who is contesting</div>
                             <div class="panel-body">
-                                {% if d.candidate_type == 'national_regional' or d.candidate_type == 'provincial'%}
                                 <form action="/" method="POST">
                                     {{ d.form.csrf_token }}
                                     {{ d.form.hidden_tag() }}
@@ -153,7 +160,6 @@
                                         </div>
                                     </div>
                                 </form>
-                                {% endif %}
     
                                 {% if candidates and candidate.candidate_type == d.candidate_type %}
                                     <div id="results">
