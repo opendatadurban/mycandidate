@@ -133,6 +133,7 @@
                             {% endif %}
                             <div class="panel-heading">Find out who is contesting</div>
                             <div class="panel-body">
+                                {% if d.candidate_type == 'national_regional' or d.candidate_type == 'provincial'%}
                                 <form action="/" method="POST">
                                     {{ d.form.csrf_token }}
                                     {{ d.form.hidden_tag() }}
@@ -148,13 +149,16 @@
                                         </div>
                                     </div>
                                 </form>
+                                {% endif %}
     
                                 {% if candidates and candidate.candidate_type == d.candidate_type %}
                                     <div id="results">
                                         {% if d.candidate_type %}
+                                            {% if d.candidate_type == 'national_regional' or d.candidate_type == 'provincial'%}
                                             <h2>{{ d.candidate_type.replace('_', ' ').title() }}: {{ candidate.list_type }}</h2>
                                             <a href="http://www.google.com/search?q={{ candidate.list_type }}" class="mb-3"
                                                 target="_blank">Get more information for: {{ candidate.list_type }}</a>
+                                            {% endif %}
                                             <h2>Your candidates are:</h2>
                                             {% for item in candidates %}
                                                 <div class="item">
