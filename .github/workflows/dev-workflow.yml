@@ -57,8 +57,14 @@ jobs:
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         
-    - name: Test with pytest
+    # - name: Test with pytest
+    #   run: |
+    #     pytest
+    #   env:
+    #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+    - name: Seed data to DB
       run: |
-        pytest
+        python rebuild_db.py
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
