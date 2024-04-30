@@ -114,4 +114,4 @@ venv.bak/
 main/static/data
 south-africa.json
 
-main/config/development.cfg
+development.cfg
