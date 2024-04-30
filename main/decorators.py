@@ -24,11 +24,10 @@ def get_candidates(form_id, db, candidate_type):
             most_common_values = row[1].strip("{}").split(',')
             code = most_common_values[0]
             retrieve_query = f"""SELECT * FROM candidates
-                    WHERE party = :form_id
+                    WHERE {code} = :form_id
                     AND candidate_type = :candidate_type
-                    AND list_type = :location
                 """
-            params = {'form_id': form_id[1], "candidate_type": candidate_type, "location": form_id[0]}
+            params = {'form_id': form_id, "candidate_type": candidate_type}
             result = db.session.execute(retrieve_query, params)
             column_names = result.keys()
             for row in result:
