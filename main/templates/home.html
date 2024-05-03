@@ -24,6 +24,11 @@
     {#
     <link href="static/css/select2min.css" rel="stylesheet">#}
     <style>
+        .navbar-default .navbar-toggle {
+            border-color: {{config.footer_colour}} !important;
+            background-color: {{config.footer_colour}} !important;
+            margin-top: 25px;
+        }
         .tab-content .panel.panel-info #results a{
             color: {{config.candidate_names_colour}};
         }
@@ -38,8 +43,8 @@
         .footer-below .btn.btn-mini.btn-primary{
             background: transparent;
             padding: 12px;
-            border-color:{{config.logo_colour}} ;
             color: {{config.logo_colour}};
+            border-color:{{config.logo_colour}} ;
             
         }
         .grey-wrapper .nav-tabs li.active a{
@@ -53,11 +58,7 @@
             }
         }
 
-        .navbar-default .navbar-toggle {
-            border-color: {{config.footer_colour}} !important;
-            background-color: {{config.footer_colour}} !important;
-            margin-top: 25px;
-        }
+
     </style>
 
     <script>
@@ -181,17 +182,43 @@
                                                 target="_blank">Get more information for: {{ candidate.list_type }}</a>
                                             {% endif %}
                                             <h2>Your candidates are:</h2>
+                                            <div class="accordion" id="accordionExample">
+                                            </div>
                                             {% for item in candidates %}
-                                                <div class="item">
-                                                    <a target="_blank" href="http://www.google.com/search?q={{ item.full_names }} {{ item.surname }}">
-                                                        {{loop.index}}. {{ item.full_names }} {{ item.surname }}
-                                                    </a><!--(Sex: {{ item.gender }})-->
-                                                        {%set item_name = item.locator.strip("{}").split(',')[0] %}
-                                                        {%set item_code = item.locator.strip("{}").split(',')[1] %}
-                                                        {% if item.party %} - <a target="_blank" href="http://www.google.com/search?q={{ item.party| urlencode }}">
-                                                            {{item.party}}
-                                                        </a>{% endif %} - {{item[item_name]}} {% if item_code %}- {{item[item_code]}}{% endif %}
-                                                        (Age: {{ item.age }})</div>
+                                            <div class="card">
+                                                <div class="card-header" id="headingOne">
+                                                    <h2 class="mb-0">
+                                                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse{{loop.index}}" aria-expanded="true" aria-controls="collapse{{loop.index}}" 
+                                                        style="padding-left: 0; text-align: left; width: 100%;">
+                                                            <div class="item">
+                                                                <a target="_blank" href="http://www.google.com/search?q={{ item.full_names }} {{ item.surname }}" style="text-decoration: underline;">
+                                                                     {{ item.full_names }} {{ item.surname }}
+                                                                </a><!--(Sex: {{ item.gender }})-->
+                                                                    {%set item_name = item.locator.strip("{}").split(',')[0] %}
+                                                                    {%set item_code = item.locator.strip("{}").split(',')[1] %}
+                                                                    {% if item.party %} - <a >
+                                                                        {{item.party}}
+                                                                    </a>{% endif %} 
+                                                                    (Age: {{ item.age }})</div>
+
+                                                        </button>
+                                                    </h2>
+                                                </div>
+                                                    <div id="collapse{{loop.index}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                                        <div class="card-body">
+                                                            <p>Eligible Candidates within the party:</p>
+                                                            <ul>
+                                                                <li>
+                                                                    <div class="item">
+                                                                        <a target="_blank" href="http://www.google.com/search?q={{ item.full_names }} {{ item.surname }}" style="text-decoration: underline;">
+                                                                             {{ item.full_names }} {{ item.surname }}
+                                                                        </a>
+                                                                            (Age: {{ item.age }})</div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        </div>
+                                                </div>
                                             {% endfor %}
                                             {% for candidate in presidential_candidates %}
                                                 <h2>Your Presidential Candidates are:</h2>
@@ -250,6 +277,13 @@
                         but it may have errors or missing details due to issues with the original data. We are not responsible for any mistakes or losses from using this data, you use it at your own risk.
                     </span>
 
+                </div>
+                <br>
+                <div class="col-lg-12 font-style" style="margin-top: 30px;">
+                    <span>
+                        <a target="_blank"
+                        href="https://drive.google.com/file/d/1EmvJ1gPPHrxbDTOYramAPVTi1i0i9hkH/view">Terms of Use</a>
+                    </span>
                 </div>
                 <br>
             </div>
