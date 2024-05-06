@@ -51,9 +51,23 @@ def home():
         sorted_df = df.sort_values(by=['party', 'orderno'])
         candidates = sorted_df.to_dict(orient='records')
 
+        party_orderno_count = {}
+
         for item in candidates:
-            if item['orderno'] == '1':
-                presidential_candidates.append(item)
+            party = item['party']
+            orderno = item['orderno']
+            
+            if orderno == '1':
+                # Check if this is the first candidate with orderno = '1' for this party
+                if party not in party_orderno_count:
+                    party_orderno_count[party] = 1
+                    presidential_candidates.append(item)
+                else:
+                    party_orderno_count[party] += 1
+                    if party_orderno_count[party] == 2:
+                        party_members.append(item)
+                    else:
+                        presidential_candidates.append(item)
             else:
                 party_members.append(item)
 
