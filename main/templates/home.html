@@ -59,9 +59,6 @@
             }
         }
 
-
-    </style>
-
     .footer-below a, .nav-heading .purple-tittle{
         color: {{config.secondary_color}};
     }
@@ -175,15 +172,6 @@
                 {% for d in data %}
                 <div id="{{d.candidate_type}}" class=" tab-pane fade {% if area_name == d.candidate_type  %} active in {% endif %}">
                         <div class="panel panel-info" style="background-color: {{config.body_foreground_colour}};">
-                            {% if d.candidate_type == 'provincial' %}
-                            <p class="description">{{config.provincial_explainer}}</p>
-                            {% endif %}
-                            {% if d.candidate_type == 'national_regional' %}
-                            <p class="description">{{config.regional_explainer}}</p>
-                            {% endif %}
-                            {% if d.candidate_type == 'national' %}
-                            <p class="description">{{config.national_explainer}}</p>
-                            {% endif %}
                             <div class="panel-heading">Find out who is contesting</div>
                             <div class="panel-body">
                                 <form action="/" method="POST">
@@ -201,7 +189,11 @@
                                         </div>
                                     </div>
                                 </form>
-    
+                                <p class="description">
+                                    This information aligns with the <a target="_blank" href="https://www.elections.org.za/pw/Documents/Outreach/Factsheets/IEC%203%20Ballots%20Factsheet.pdf">three ballots you will receive on election day</a>, which will only show the political party name and party leader. 
+                                    Click the + to see additional eligible candidates.<br><br>
+                                    <a target="_blank" href="https://www.opencitieslab.org/blogs/south-africas-new-three-ballot-system-explained-deciding-who-runs-south-africa">Learn about the Three Ballot System</a>
+                                </p>
                                 {% if candidates and candidate.candidate_type == d.candidate_type %}
                                     <div id="results">
                                         {% if d.candidate_type %}
@@ -219,7 +211,7 @@
                                                 <div class="card-header" id="headingOne">
                                                     <h2 class="mb-0">
                                                         <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse{{loop.index}}" aria-expanded="true" aria-controls="collapse{{loop.index}}" 
-                                                        style="padding-left: 0; text-align: left; width: 100%;">
+                                                        style="padding-left: 0; text-align: left; width: 100%; white-space: initial;padding-right: 30px;">
                                                             <div class="item">
                                                                 <a target="_blank" href="http://www.google.com/search?q={{ item.full_names }} {{ item.surname }}" style="text-decoration: underline;">
                                                                     {{ item.full_names }} {{ item.surname }}
