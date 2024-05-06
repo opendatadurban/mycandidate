@@ -63,8 +63,8 @@ jobs:
     #   env:
     #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-    - name: Seed data to DB
-      run: |
-        python rebuild_db.py
-      env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    # - name: Seed data to DB
+    #   run: |
+    #     python rebuild_db.py
+    #   env:
+    #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
