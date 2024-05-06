@@ -234,11 +234,14 @@
                                                         </button>
                                                     </h2>
                                                 </div>
+                                                {% endif %}
                                                 <div id="collapse{{loop.index}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                                    {% if candidates %}
                                                     <div class="card-body">
                                                         <p>Eligible Candidates within the party:</p>
                                                         <ul>
                                                             {%for can in candidates%}
+                                                            {% if can.party == item.party %}
                                                             <li>
                                                                 <div class="item">
                                                                     <a target="_blank" href="http://www.google.com/search?q={{ can.full_names }} {{ can.surname }}" style="text-decoration: underline;">
@@ -246,11 +249,12 @@
                                                                     </a>
                                                                         (Age: {{ can.age }})</div>
                                                             </li>
+                                                            {% endif %}
                                                             {%endfor%}
                                                         </ul>
                                                     </div>
+                                                    {% endif %}
                                                 </div>
-                                                {%endif%}
                                             </div>
                                             {% endfor %}
                                             <!-- {% for candidate in presidential_candidates %}

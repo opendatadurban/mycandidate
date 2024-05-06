@@ -17,6 +17,7 @@ def home():
     config = config_queryset.json()
     data = get_data()
     candidate_type = data[0]['candidate_type']
+    
     if candidate_type == 'national' and request.method == 'GET':
         form_id = 'National'
         candidates, code = get_candidates(form_id, db, candidate_type)
@@ -30,8 +31,6 @@ def home():
                 presidential_candidates.append(item)
             else:
                 party_members.append(item)
-        print("final pres result", presidential_candidates[0:2])
-        print("final can result", party_members[0:2])
 
         candidate_query = f"""
             SELECT * FROM candidates
@@ -57,8 +56,6 @@ def home():
                 presidential_candidates.append(item)
             else:
                 party_members.append(item)
-        print("final pres result", presidential_candidates[0:2])
-        print("final can result", party_members[0:2])
 
         candidate_query = f"""
             SELECT * FROM candidates
@@ -69,11 +66,14 @@ def home():
         params = {'form_id': form_id, "candidate_type": candidate_type}
         candidate_result = db.session.execute(candidate_query, params)
         candidate = candidate_result.fetchone()
-        print(candidate)
+    # print("final pres result", presidential_candidates[0:2])
+    # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    # print("final can result", party_members[0:2])
+    # print(candidate)
         
     return render_template(
             'home.html', 
-            candidates=candidates,
+            candidates=party_members,
             presidential_candidates=presidential_candidates,
             candidate = candidate,
             ward=form_id, 
