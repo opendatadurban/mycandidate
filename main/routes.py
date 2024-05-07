@@ -70,7 +70,6 @@ def home():
                         presidential_candidates.append(item)
             else:
                 party_members.append(item)
-
         candidate_query = f"""
             SELECT * FROM candidates
             WHERE {code} = :form_id
@@ -80,9 +79,11 @@ def home():
         params = {'form_id': form_id, "candidate_type": candidate_type}
         candidate_result = db.session.execute(candidate_query, params)
         candidate = candidate_result.fetchone()
+    
+    party_members = sorted(party_members, key=lambda x: int(x['orderno']))
     # print("final pres result", presidential_candidates[0:2])
     # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    # print("final can result", party_members[0:2])
+    # print("final can result", party_members[0:20])
     # print(candidate)
         
     return render_template(
