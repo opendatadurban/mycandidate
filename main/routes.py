@@ -4,6 +4,7 @@ from .database.models import *
 from .app import app
 from sqlalchemy import asc
 from .decorators import requires_auth, get_candidates
+from .redis import get_cached_data_or_fetch
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -20,17 +21,7 @@ def home():
     
     if candidate_type == 'national' and request.method == 'GET':
         form_id = 'National'
-        candidates, code = get_candidates(form_id, db, candidate_type)
-        # Sort alphabetically
-        df = pd.DataFrame(candidates)
-        sorted_df = df.sort_values(by='party')
-        candidates = sorted_df.to_dict(orient='records')
-
-        for item in candidates:
-            if item['orderno'] == '1':
-                presidential_candidates.append(item)
-            else:
-                party_members.append(item)
+        presidential_candidates, party_members, code = get_cached_data_or_fetch(form_id, db, candidate_type)
 
         candidate_query = f"""
             SELECT * FROM candidates
@@ -48,7 +39,7 @@ def home():
         candidates, code = get_candidates(form_id, db, candidate_type)
         # Sort alphabetically
         df = pd.DataFrame(candidates)
-        sorted_df = df.sort_values(by=['party', 'orderno'])
+        sorted_df = df.sort_values(by=['party'])
         candidates = sorted_df.to_dict(orient='records')
 
         party_orderno_count = {}
@@ -81,10 +72,6 @@ def home():
         candidate = candidate_result.fetchone()
     
     party_members = sorted(party_members, key=lambda x: int(x['orderno']))
-    # print("final pres result", presidential_candidates[0:2])
-    # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    # print("final can result", party_members[0:20])
-    # print(candidate)
         
     return render_template(
             'home.html', 
@@ -97,5 +84,4 @@ def home():
             config=config,
             area_name = candidate_type,
             domain = request.url_root
-
         )
