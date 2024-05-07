@@ -43,6 +43,7 @@ def get_data():
     distinct_types_result = db.session.execute(distinct_types_query)
 
     data = []
+
     for row in distinct_types_result:
         most_common_values = row[1].strip("{}").split(',')
         candidate_type = row[0]

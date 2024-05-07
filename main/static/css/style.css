@@ -271,6 +271,20 @@ body{
 .navbar-default .navbar-nav>li>a:hover{
     color: #fff;
 }
+.panel .description{
+    font-family: 'Montserrat';
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20.8px;
+    letter-spacing: 0.5471879839897156px;
+    text-align: left;
+    margin-top: 30px;
+
+}
+.panel .description a{
+    color: #F2AA71;
+    text-decoration: underline;
+}
 @media (max-width: 768px) {
     .grey-wrapper .nav-tabs li.active a{
         min-height: 70px;
@@ -284,9 +298,10 @@ body{
     .panel-body, .panel-heading{
         padding: 20px;
     }
-    .panel .description{
+    /* .panel .description{
         padding: 20px;
-    }
+    } */
+
     .nav-heading .navbar-brand{
         padding-left: 6px;
     }
@@ -316,4 +331,45 @@ body{
     .navbar-default .navbar-collapse, .navbar-default .navbar-form{
         padding-right: 0;
     }
+}
+button.btn.btn-link{
+    position: relative;
+}
+button.btn.btn-link.collapsed::after{
+    content: url('/static/plus.svg');
+    height: 20px;
+    width: 20px;
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 6px;
+}
+
+button.btn.btn-link::after{
+    content: url('/static/minus.svg');
+    height: 20px;
+    width: 20px;
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 6px;
+}
+button.btn.btn-link:focus, button.btn.btn-link:hover{
+    outline: none;
+    border-color: transparent;
+}
+.collapse .card-body {
+    color: #FFFFFF;
+}
+.collapse .card-body p{
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    color: #FFFFFF;
+}
+.collapse .card-body ul{
+    list-style: none;
+}
+.collapse .card-body ul li{
+    margin-left: 5px;
 }

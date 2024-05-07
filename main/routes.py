@@ -4,26 +4,25 @@ from .database.models import *
 from .app import app
 from sqlalchemy import asc
 from .decorators import requires_auth, get_candidates
+from .redis import get_cached_data_or_fetch
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
     candidates = None
     candidate = None
     presidential_candidates = []
+    party_members = []
     form_id = None
     form_url = "/"
     config_queryset = db.session.query(Config).first()
     config = config_queryset.json()
     data = get_data()
     candidate_type = data[0]['candidate_type']
+    
     if candidate_type == 'national' and request.method == 'GET':
         form_id = 'National'
-        candidates, code = get_candidates(form_id, db, candidate_type)
-        # Sort alphabetically
-        df = pd.DataFrame(candidates)
-        sorted_df = df.sort_values(by='party')
-        candidates = sorted_df.to_dict(orient='records')
-        # print("final result", candidates[0:2])
+        presidential_candidates, party_members, code = get_cached_data_or_fetch(form_id, db, candidate_type)
+
         candidate_query = f"""
             SELECT * FROM candidates
             WHERE {code} = :form_id
@@ -40,9 +39,28 @@ def home():
         candidates, code = get_candidates(form_id, db, candidate_type)
         # Sort alphabetically
         df = pd.DataFrame(candidates)
-        sorted_df = df.sort_values(by='party')
+        sorted_df = df.sort_values(by=['party'])
         candidates = sorted_df.to_dict(orient='records')
-        # print("final result", candidates[0:2])
+
+        party_orderno_count = {}
+
+        for item in candidates:
+            party = item['party']
+            orderno = item['orderno']
+            
+            if orderno == '1':
+                # Check if this is the first candidate with orderno = '1' for this party
+                if party not in party_orderno_count:
+                    party_orderno_count[party] = 1
+                    presidential_candidates.append(item)
+                else:
+                    party_orderno_count[party] += 1
+                    if party_orderno_count[party] == 2:
+                        party_members.append(item)
+                    else:
+                        presidential_candidates.append(item)
+            else:
+                party_members.append(item)
         candidate_query = f"""
             SELECT * FROM candidates
             WHERE {code} = :form_id
@@ -52,12 +70,13 @@ def home():
         params = {'form_id': form_id, "candidate_type": candidate_type}
         candidate_result = db.session.execute(candidate_query, params)
         candidate = candidate_result.fetchone()
-        # print(candidate)
+    
+    party_members = sorted(party_members, key=lambda x: int(x['orderno']))
         
     return render_template(
             'home.html', 
-            candidates=candidates,
-            presidential_candidates = presidential_candidates,
+            candidates=party_members,
+            presidential_candidates=presidential_candidates,
             candidate = candidate,
             ward=form_id, 
             form_url=form_url,
