@@ -37,13 +37,8 @@ def home():
         form_id = request.form['ds_id']
         candidate_type = request.form['candidate_type']
         candidates, code = get_candidates(form_id, db, candidate_type)
-        # Sort alphabetically
-        df = pd.DataFrame(candidates)
-        sorted_df = df.sort_values(by=['party'])
-        candidates = sorted_df.to_dict(orient='records')
 
         party_orderno_count = {}
-
         for item in candidates:
             party = item['party']
             orderno = item['orderno']

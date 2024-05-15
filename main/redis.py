@@ -5,6 +5,7 @@ from .app import app
 
 redis_url = app.config['REDIS_URL']
 redis_client = redis.StrictRedis.from_url(redis_url, ssl_cert_reqs=None)
+# redis_client.delete('cached_candidates')
 
 def sort_data(candidates):
     presidential_candidates = []
