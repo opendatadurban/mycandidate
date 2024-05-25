@@ -80,3 +80,12 @@ def home():
             area_name = candidate_type,
             domain = request.url_root
         )
+
+@app.route('/insights', methods=['GET', 'POST'])
+def insights():
+    config_queryset = db.session.query(Config).first()
+    config = config_queryset.json()
+    return render_template(
+            'insights.html',
+            config=config,
+            domain = request.url_root)
