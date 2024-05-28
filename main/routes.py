@@ -5,8 +5,12 @@ from .app import app
 from sqlalchemy import asc
 from .decorators import requires_auth, get_candidates
 from .redis import get_cached_data_or_fetch
+from flask_minify import decorators as minify_decorators
+
+
 
 @app.route('/', methods=['GET', 'POST'])
+@minify_decorators.minify(html=True, js=True, cssless=True)
 def home():
     candidates = None
     candidate = None
