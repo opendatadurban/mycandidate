@@ -29,3 +29,6 @@ app.config['WTF_CSRF_ENABLED'] = False
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+from flask_minify import Minify
+minify = Minify(app=app, passive=True)
