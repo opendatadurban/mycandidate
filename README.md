@@ -56,3 +56,13 @@ run 'python rebuild_db.py'
 - Linux/Mac to set the environment path `export PYTOHNPATH=<name-of-project>`
 
 Then run `pytest` for simple test summary or `pytest -vv` for detailed test summary
+
+### Redis Setup
+Redis is required for caching and background task management.
+
+Install Redis:
+
+1. On Mac OS X: `brew install redis`
+2. On Windows: Use the Redis [MSI installer](https://github.com/microsoftarchive/redis/releases)
+3. On Ubuntu: `sudo apt-get update && sudo apt-get install redis-server`
+4. Update your `development.cfg` to include Redis configuration: `REDIS_URL = "redis://<redis-host>"`
