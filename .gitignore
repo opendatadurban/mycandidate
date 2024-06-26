@@ -115,3 +115,4 @@ main/static/data
 south-africa.json
 
 development.cfg
+*.csv

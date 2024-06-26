@@ -6,8 +6,7 @@
 
 
 ## Website Environments
-- [Staging Environment](https://greenfield-dev.herokuapp.com)
-- [Production Environment](https://greenfield-dev.herokuapp.com)
+- [Production Environment](https://southafrica.mycandidate.africa/)
 
 ## Backend Setup
 ### Setting up a virtual environment with Python and pip
@@ -15,6 +14,7 @@
 * install a virtual env and activate it: `python -m venv env; env/Scripts/activate`[Windows]
 * install a virtual env and activate it: `virtualenv --no-site-packages env; source env/bin/activate`[Linux/iOS]
 * install requirements: `pip install -r requirements.txt`
+* copy the configuration file: `cp dexter/config/example.development.cfg dexter/config/development.cfg`.
 
 ### Setting up a virtual anaconda environment with Python and pip
 * clone the repo
