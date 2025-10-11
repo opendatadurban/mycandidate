@@ -102,3 +102,112 @@ def get_cached_data_or_fetch(form_id, db, candidate_type):
         valkey_client.set('cached_candidates', json.dumps(data_to_cache))
         valkey_client.expire('cached_candidates', 86400)  # Cache for 24 hours
         return presidential_candidates, party_members, code
+
+
+def get_cached_provincial_candidates_or_fetch(province_id, db, candidate_type):
+    """Cache and retrieve provincial candidates by province"""
+    cache_key = f'cached_provincial_candidates_{province_id}'
+    cached_data = valkey_client.get(cache_key)
+    
+    if cached_data:
+        data = json.loads(cached_data)
+        return data["candidates"]["presidential"], data["candidates"]["party_members"], data["code"]
+    else:
+        candidates, code = get_candidates(province_id, db, candidate_type)
+        presidential_candidates, party_members = sort_data(candidates)
+        
+        # Cache the fetched data for future requests
+        data_to_cache = {
+            'candidates': {
+                'presidential': presidential_candidates, 
+                'party_members': party_members
+            }, 
+            'code': code,
+            'province_id': province_id
+        }
+        valkey_client.set(cache_key, json.dumps(data_to_cache))
+        valkey_client.expire(cache_key, 86400)  # Cache for 24 hours
+        return presidential_candidates, party_members, code
+
+
+def get_cached_regional_candidates_or_fetch(region_id, db, candidate_type):
+    """Cache and retrieve regional candidates by region"""
+    cache_key = f'cached_regional_candidates_{region_id}'
+    cached_data = valkey_client.get(cache_key)
+    
+    if cached_data:
+        data = json.loads(cached_data)
+        return data["candidates"]["presidential"], data["candidates"]["party_members"], data["code"]
+    else:
+        candidates, code = get_candidates(region_id, db, candidate_type)
+        presidential_candidates, party_members = sort_data(candidates)
+        
+        # Cache the fetched data for future requests
+        data_to_cache = {
+            'candidates': {
+                'presidential': presidential_candidates, 
+                'party_members': party_members
+            }, 
+            'code': code,
+            'region_id': region_id
+        }
+        valkey_client.set(cache_key, json.dumps(data_to_cache))
+        valkey_client.expire(cache_key, 86400)  # Cache for 24 hours
+        return presidential_candidates, party_members, code
+
+
+def get_all_cached_keys():
+    """Get all cached candidate keys for the viewer"""
+    try:
+        # Get all keys that start with 'cached_'
+        all_keys = valkey_client.keys('cached_*')
+        return [key.decode('utf-8') if isinstance(key, bytes) else key for key in all_keys]
+    except Exception as e:
+        print(f"Error getting cached keys: {e}")
+        return []
+
+
+def get_cache_info():
+    """Get information about all cached data"""
+    cache_info = {
+        'total_keys': 0,
+        'keys_by_type': {},
+        'total_size': 0,
+        'expiration_info': {}
+    }
+    
+    try:
+        all_keys = valkey_client.keys('cached_*')
+        cache_info['total_keys'] = len(all_keys)
+        
+        for key in all_keys:
+            key_str = key.decode('utf-8') if isinstance(key, bytes) else key
+            
+            # Determine key type
+            if 'provincial' in key_str:
+                key_type = 'provincial'
+            elif 'regional' in key_str:
+                key_type = 'regional'
+            else:
+                key_type = 'national'
+            
+            if key_type not in cache_info['keys_by_type']:
+                cache_info['keys_by_type'][key_type] = 0
+            cache_info['keys_by_type'][key_type] += 1
+            
+            # Get TTL
+            ttl = valkey_client.ttl(key)
+            cache_info['expiration_info'][key_str] = ttl if ttl > 0 else 'No expiration'
+            
+            # Get size (approximate)
+            try:
+                value = valkey_client.get(key)
+                if value:
+                    cache_info['total_size'] += len(value)
+            except:
+                pass
+                
+    except Exception as e:
+        print(f"Error getting cache info: {e}")
+    
+    return cache_info
