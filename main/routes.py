@@ -4,7 +4,7 @@ from .database.models import *
 from .app import app
 from sqlalchemy import asc
 from .decorators import requires_auth, get_candidates
-from .redis import get_cached_data_or_fetch
+from .redis import get_cached_data_or_fetch, valkey_client
 from flask_minify import decorators as minify_decorators
 
 
@@ -93,3 +93,84 @@ def insights():
             'insights.html',
             config=config,
             domain = request.url_root)
+
+@app.route('/valkey-viewer', methods=['GET', 'POST'])
+def valkey_viewer():
+    config_queryset = db.session.query(Config).first()
+    config = config_queryset.json()
+    
+    keys_data = []
+    search_pattern = "*"
+    error_message = None
+    
+    try:
+        if request.method == 'POST':
+            search_pattern = request.form.get('search_pattern', '*')
+            if not search_pattern:
+                search_pattern = "*"
+        
+        # Get all keys matching the pattern
+        keys = valkey_client.keys(search_pattern)
+        
+        for key in keys:
+            try:
+                # Get key type
+                key_type = valkey_client.type(key).decode('utf-8')
+                
+                # Get TTL
+                ttl = valkey_client.ttl(key)
+                
+                # Get value based on type
+                if key_type == 'string':
+                    value = valkey_client.get(key)
+                    if value:
+                        value = value.decode('utf-8')
+                        # Try to format as JSON if possible
+                        try:
+                            import json
+                            parsed_value = json.loads(value)
+                            value = json.dumps(parsed_value, indent=2)
+                        except:
+                            pass
+                elif key_type == 'list':
+                    value = valkey_client.lrange(key, 0, -1)
+                    value = [v.decode('utf-8') if isinstance(v, bytes) else v for v in value]
+                elif key_type == 'set':
+                    value = valkey_client.smembers(key)
+                    value = [v.decode('utf-8') if isinstance(v, bytes) else v for v in value]
+                elif key_type == 'hash':
+                    value = valkey_client.hgetall(key)
+                    value = {k.decode('utf-8') if isinstance(k, bytes) else k: 
+                            v.decode('utf-8') if isinstance(v, bytes) else v 
+                            for k, v in value.items()}
+                else:
+                    value = "Unsupported type"
+                
+                keys_data.append({
+                    'key': key.decode('utf-8') if isinstance(key, bytes) else key,
+                    'type': key_type,
+                    'value': value,
+                    'ttl': ttl if ttl > 0 else 'No expiration'
+                })
+            except Exception as e:
+                keys_data.append({
+                    'key': key.decode('utf-8') if isinstance(key, bytes) else key,
+                    'type': 'error',
+                    'value': f"Error reading key: {str(e)}",
+                    'ttl': 'N/A'
+                })
+        
+        # Sort keys alphabetically
+        keys_data.sort(key=lambda x: x['key'])
+        
+    except Exception as e:
+        error_message = f"Error connecting to Valkey: {str(e)}"
+    
+    return render_template(
+        'valkey_viewer.html',
+        keys_data=keys_data,
+        search_pattern=search_pattern,
+        error_message=error_message,
+        config=config,
+        domain=request.url_root
+    )

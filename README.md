@@ -57,12 +57,15 @@ run 'python rebuild_db.py'
 
 Then run `pytest` for simple test summary or `pytest -vv` for detailed test summary
 
-### Redis Setup
-Redis is required for caching and background task management.
+### Valkey Setup
+Valkey is required for caching and background task management. Valkey is an open-source, Redis-compatible key-value datastore backed by the Linux Foundation.
 
-Install Redis:
+Install Valkey:
 
-1. On Mac OS X: `brew install redis`
-2. On Windows: Use the Redis [MSI installer](https://github.com/microsoftarchive/redis/releases)
-3. On Ubuntu: `sudo apt-get update && sudo apt-get install redis-server`
-4. Update your `development.cfg` to include Redis configuration: `REDIS_URL = "redis://<redis-host>"`
+1. On Mac OS X: `brew install valkey`
+2. On Windows: Download from [Valkey releases](https://github.com/valkey-io/valkey/releases)
+3. On Ubuntu: `sudo apt-get update && sudo apt-get install valkey-server`
+4. Using Docker: `docker run --rm valkey/valkey:8.1.4`
+5. Update your `development.cfg` to include Valkey configuration: `VALKEY_URL = "valkey://<valkey-host>"`
+
+For more installation options, visit [valkey.io](https://valkey.io/)
