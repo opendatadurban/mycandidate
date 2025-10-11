@@ -4,7 +4,7 @@ from .database.models import *
 from .app import app
 from sqlalchemy import asc
 from .decorators import requires_auth, get_candidates
-from .redis import get_cached_data_or_fetch, valkey_client
+from .valkey import get_cached_data_or_fetch, valkey_client
 from flask_minify import decorators as minify_decorators
 
 
