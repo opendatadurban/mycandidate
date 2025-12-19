@@ -21,6 +21,7 @@ services:
     volumes:
       - ./main:/app/main
       - ./main/data:/app/main/data
+      - ./tests:/app/tests
     # Create development.cfg on startup if it doesn't exist
     command: sh -c "if [ ! -f /app/main/config/development.cfg ]; then cp /app/main/config/example.development.cfg /app/main/config/development.cfg; fi && gunicorn --bind 0.0.0.0:5000 --workers 4 --timeout 120 app:app"
     networks:
