@@ -93,3 +93,17 @@ def insights():
             'insights.html',
             config=config,
             domain = request.url_root)
+
+@app.route('/health', methods=['GET'])
+def health():
+    """
+    Health check endpoint for load balancers and monitoring
+    """
+    from flask import jsonify
+    try:
+        # Check database connection
+        from sqlalchemy import text
+        db.session.execute(text('SELECT 1'))
+        return jsonify({'status': 'healthy', 'database': 'connected'}), 200
+    except Exception as e:
+        return jsonify({'status': 'unhealthy', 'database': 'disconnected', 'error': str(e)}), 503
