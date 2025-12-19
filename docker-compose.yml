@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: mycandidate-web
     ports:
-      - "5000:5000"
+      - "5001:5000"
     environment:
       - FLASK_ENV=development
       - SECRET_KEY=${SECRET_KEY:-dev-secret-key-change-in-production}
@@ -21,6 +21,8 @@ services:
     volumes:
       - ./main:/app/main
       - ./main/data:/app/main/data
+    # Create development.cfg on startup if it doesn't exist
+    command: sh -c "if [ ! -f /app/main/config/development.cfg ]; then cp /app/main/config/example.development.cfg /app/main/config/development.cfg; fi && gunicorn --bind 0.0.0.0:5000 --workers 4 --timeout 120 app:app"
     networks:
       - mycandidate-network
     healthcheck:

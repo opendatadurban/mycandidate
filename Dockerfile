@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     postgresql-client \
     libpq-dev \
+    libc6-dev \
     && rm -rf /var/lib/apt/lists/*
 
 
@@ -32,6 +33,11 @@ COPY --from=builder /root/.local /home/appuser/.local
 
 # Copy application code
 COPY --chown=appuser:appuser . .
+
+# Create development.cfg from example.development.cfg (before switching user)
+# The app expects development.cfg when FLASK_ENV=development
+RUN cp main/config/example.development.cfg main/config/development.cfg && \
+    chown appuser:appuser main/config/development.cfg
 
 # Set PATH to include user local bin
 ENV PATH=/home/appuser/.local/bin:$PATH

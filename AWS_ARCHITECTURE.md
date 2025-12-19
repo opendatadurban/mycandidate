@@ -4,6 +4,8 @@
 
 This document describes the AWS architecture for deploying the MyCandidate Flask application using ECS (Elastic Container Service) in the **af-south-1 (Africa - Cape Town, South Africa)** region to ensure data residency compliance for South African election data.
 
+## Note: Verify instance type availability in af-south-1; some newer instance types may have limited availability in this region
+
 
 ## Architecture Components
 
@@ -379,4 +381,36 @@ This document describes the AWS architecture for deploying the MyCandidate Flask
 4. Set up alerting for critical metrics
 5. Perform load testing to validate scaling policies
 6. Document runbooks for common operations
+
+
+
+1. **Start all services**:
+   ```bash
+   podman-compose -f docker-compose.yml up -d
+   ```
+
+2. **Initialize the database** (wait a few seconds for services to start):
+   ```bash
+   sleep 10
+   podman exec -it mycandidate-web python rebuild_db.py
+   ```
+
+3. **Test the API**:
+   ```bash
+   chmod +x test-api.sh
+   ./test-api.sh
+   ```
+
+4. **Or test manually**:
+   ```bash
+   # Health check
+   curl http://localhost:5000/api/v1/health
+   
+   # Get candidates by ward
+   curl http://localhost:5000/api/v1/wards/WARD001/candidates
+   ```
+
+5. **Stop services**:
+   ```bash
+   podman-compose -f podman-compose.yml down
 
