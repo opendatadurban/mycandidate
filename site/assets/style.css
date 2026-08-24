@@ -220,14 +220,33 @@ pre code {
   color: var(--color-muted);
 }
 
-.netlify-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+.footer-copy {
+  margin: 0;
 }
 
-.netlify-badge img {
-  height: 30px;
+.netlify-band {
+  background: var(--color-primary-dark);
+  padding: 2.75rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.netlify-band-label {
+  margin: 0;
+  color: #eaf3ef;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+
+.netlify-band-link {
+  display: inline-flex;
+}
+
+.netlify-band-link img {
+  height: 72px;
   width: auto;
   display: block;
 }
