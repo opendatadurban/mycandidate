@@ -1,5 +1,10 @@
 # My Candidate flask template
 
+## Project site
+A small marketing/documentation site for this project lives in [`/site`](site) and
+is deployed to Netlify. It includes the project's [Code of Conduct](CODE_OF_CONDUCT.md)
+and a separate [technical documentation](site/technical/index.html) section.
+
 ## Technical Specs for QA
 * Python 3.10.8
 * postgresql 12.6.* or later

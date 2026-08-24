@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Technical Documentation — MyCandidate</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Technical documentation for the MyCandidate open source platform: stack, architecture, setup and deployment.">
+  <link rel="icon" href="../assets/img/favicon.png">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="../index.html">
+        <img src="../assets/img/favicon.png" alt="">
+        MyCandidate
+      </a>
+      <nav class="main-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Technical Docs</a>
+        <a href="../code-of-conduct.html">Code of Conduct</a>
+        <a href="https://github.com/opendatadurban/mycandidate">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Technical documentation</h2>
+      <p>This page summarises the technology behind MyCandidate. It lives in its own
+        <code>/technical</code> directory, separate from the marketing pages, so it can grow
+        independently. For the full, always up-to-date setup guide see the
+        <a href="https://github.com/opendatadurban/mycandidate#readme">repository README</a>.</p>
+    </section>
+
+    <section id="stack">
+      <h2>Stack</h2>
+      <table>
+        <tr><th>Layer</th><th>Technology</th></tr>
+        <tr><td>Backend framework</td><td>Flask (Python 3.10.8)</td></tr>
+        <tr><td>Database</td><td>PostgreSQL 12.6 or later</td></tr>
+        <tr><td>ORM &amp; migrations</td><td>SQLAlchemy with Flask-Migrate / Alembic</td></tr>
+        <tr><td>Caching &amp; background tasks</td><td>Redis</td></tr>
+        <tr><td>Testing</td><td>pytest</td></tr>
+        <tr><td>Hosting (application)</td><td>Heroku-style deployment via <code>Procfile</code> and <code>runtime.txt</code></td></tr>
+        <tr><td>Hosting (this site)</td><td>Netlify, built from the <code>/site</code> directory</td></tr>
+      </table>
+    </section>
+
+    <section id="architecture">
+      <h2>Architecture overview</h2>
+      <p>MyCandidate is a server-rendered Flask application. Candidate, election and location data is
+        stored in PostgreSQL and served through Flask routes and Jinja templates
+        (<code>main/routes.py</code>, <code>main/templates/</code>). Configuration for each country or
+        election deployment lives under <code>main/config/</code>, which lets the same codebase be
+        re-used across different elections. Redis is used for caching and background task management.
+        This <code>/site</code> directory is intentionally separate: it is a static, dependency-free
+        site that documents the project and is deployed independently to Netlify, without needing the
+        Python application, a database, or Redis.</p>
+    </section>
+
+    <section id="setup">
+      <h2>Local application setup (quick reference)</h2>
+      <pre><code>git clone https://github.com/opendatadurban/mycandidate.git
+cd mycandidate
+python -m venv env &amp;&amp; env/Scripts/activate   # Windows
+pip install -r requirements.txt
+cp dexter/config/example.development.cfg dexter/config/development.cfg
+
+# create the PostgreSQL database, then:
+python rebuild_db.py
+
+# run the test suite
+pytest</code></pre>
+      <p>Redis is required for caching and background jobs — see the README for install instructions
+        per platform, and set <code>REDIS_URL</code> in your config file.</p>
+    </section>
+
+    <section id="site-deploy">
+      <h2>Deploying this static site</h2>
+      <p>This documentation site has no build step. Netlify is configured (see
+        <code>netlify.toml</code> at the repository root) to publish the <code>/site</code> directory
+        directly:</p>
+      <pre><code>[build]
+  publish = "site"</code></pre>
+      <p>To preview locally, just open <code>site/index.html</code> in a browser, or serve the folder
+        with any static file server.</p>
+    </section>
+
+    <section id="contributing">
+      <h2>Contributing</h2>
+      <p>Issues and pull requests are welcome on
+        <a href="https://github.com/opendatadurban/mycandidate">GitHub</a>. Please read the
+        <a href="../code-of-conduct.html">Code of Conduct</a> before opening an issue or submitting a
+        change.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="../code-of-conduct.html">Code of Conduct</a>
+        <a href="https://github.com/opendatadurban/mycandidate/blob/main/LICENSE">MIT License</a>
+        <a href="../index.html">Home</a>
+      </div>
+      <a class="netlify-badge" href="https://www.netlify.com" title="This site is powered by Netlify">
+        <img src="https://www.netlify.com/assets/badges/netlify-badge-color-accent.svg" alt="Deploys by Netlify">
+      </a>
+    </div>
+  </footer>
+</body>
+</html>
